@@ -1,3 +1,18 @@
+.top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 1rem;
+    background-color: #b40000;
+    margin-bottom: 2rem;
+}
+
+.top p{
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: white;
+}
+
 /* .parent{
     height: 100vh;
 } */
@@ -42,6 +57,12 @@
     margin-bottom: 2.4rem;
 }
 
+.parentMid{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 1rem;
+}
+
 .parentMiddleTop{
     font-size: 1.6rem;
     font-weight: 400;
@@ -52,6 +73,12 @@
 .parentMiddleBottom{
     font-size: 2rem;
     font-weight: 600;
+    color: white;
+}
+
+.parentMiddleBottomOutBy{
+    font-size: 1.2rem;
+    font-weight: 400;
     color: white;
 }
 
@@ -149,6 +176,10 @@
 
 .inningOver{
     margin-top: 3rem;
+}
+
+.mainContent{
+    padding: 0 1rem;
 }
 
 

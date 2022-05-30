@@ -1,11 +1,13 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
+import {Link} from 'react-router-dom';
 import handleEvent from "../utils/handleEvent";
 import swapStrikers from "../utils/swapStrikers";
 import fuzzySearch from "../utils/regEx";
 import axios from 'axios';
 import mps from "./MainPage.module.css";
+import s from "./Navbar.module.css";
 
 const MainPage = ({data,setData,history,handleBowler,his,match}) => {
 
@@ -32,6 +34,10 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
     if(currentData){
     console.log("currentData",currentData);
     data={...currentData};
+    if(currentData.bowler.name==''){
+        console.log("No bowler found");
+        history.push(`/newBowler/${match.params.matchId}`);
+    }
     setData(data);
     }
 }
@@ -167,7 +173,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        axios.post(`http://localhost:5000/match/${match.params.matchId}`,body,config);
+        axios.post(`/match/${match.params.matchId}`,body,config);
         // data.striker={name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false};
         // data.nonStriker={name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false};
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered > 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false},
@@ -203,7 +209,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        axios.post(`http://localhost:5000/match/${match.params.matchId}`,body,config);
+        axios.post(`/match/${match.params.matchId}`,body,config);
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered >= 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
         ,nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
         history.push(`/matchSummary/${match.params.matchId}`);
@@ -215,186 +221,150 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         }
     }
     console.log(data);
+
+    const calculateRRR = (data) => {
+        var overRemaining = data.overs - data[data.batting].overs - 1;
+        if(data[data.batting].balls == 0){
+            overRemaining += 1;
+        }else{
+            overRemaining = overRemaining + ((6-data[data.batting].balls)/10);
+        }
+        var MoreToWin = data.toWin + 1 - data[data.batting].runs;
+        console.log(MoreToWin);
+        console.log(overRemaining);
+        return <h5>{(MoreToWin/overRemaining).toFixed(2)}</h5>
+    }
     return (
         <div>
             {!loading ?
                 <div className={mps.parent}>
                     {checkValid()}
-                  <div className={mps.top}>
-                      <div>
-                      <p style={{marginLeft:'5px'}}>{ data.batting } vs { data.bowling }</p>
-                      </div>
-                  </div>
-                  <div className={mps.bottom}>
-                      <div className={mps.section1}>
-                          <div className="tableSection1">
-                              <table className="table1">
-                                  <thead>
-                                  <tr>
-                                      <th>
-                                          <h5>{ data.batting }</h5>
-                                      </th>
-                                      <th>
-                                          <h5>CRR</h5>
-                                      </th>
-                                      <th>
-                                          <h5>Target</h5>
-                                      </th>
-                                      <th>
-                                          <h5>RR</h5>
-                                      </th>
-                                  </tr>
-                                  </thead>
-                                  <tbody>
-                                  <tr>
-                                      <td style={{display:"flex"}}><h2>{ data[data.batting].runs } - { data[data.batting].wickets }</h2> <h6 style={{padding:'3px'}}>({ data[data.batting].overs }.{ data[data.batting].balls })</h6></td>
-                                      <td><h5>{ (data[data.batting].runs / parseFloat(data[data.batting].overs + data[data.batting].balls/6)).toFixed(2) }</h5></td>
-                                      <td>{!data.battingFirst ? <h5>{ data.toWin }</h5> : <h5>-</h5> } </td>       
-                                      <td>{!data.battingFirst ? <h5>{ data.toWin }</h5> : <h5>-</h5> }</td>
-                                  </tr>
-                                  </tbody>
-                              </table>
-                              <div>
-                                  {!data.battingFirst ? <h5>{ data.batting } needs { data.toWin - data[data.batting].runs +1 } runs in { data.overs*6 -  data[data.batting].overs*6 - data.bowler.ballsDelivered } balls </h5> : "" }
-                              </div>
-                          </div>
-                      </div>
-                      <div className={mps.section2}>
-                          <table style={{height:'150px'}} className="table2">
-                              <thead>
-                              <tr>
-                                  <th>
-                                      <h5>Batsman</h5>
-                                  </th>
-                                  <th>
-                                      <h5>R</h5>
-                                  </th>
-                                  <th>
-                                      <h5>B</h5>
-                                  </th>
-                                  <th>
-                                      <h5>4s</h5>
-                                  </th>
-                                  <th>
-                                      <h5>6s</h5>
-                                  </th>
-                                  <th>
-                                      <h5>SR</h5>
-                                  </th>
-                              </tr>
-                              </thead>
-                              <tbody>
-                              <tr>
-                                  <td><h4>{ data.striker.name } *</h4></td>
-                                  <td><h4>{ data.striker.runs }</h4></td>
-                                  <td><h4>{ data.striker.balls }</h4></td>
-                                  <td><h4>{ data.striker.fours }</h4></td>
-                                  <td><h4>{ data.striker.sixes }</h4></td>
-                                  <td>{data.striker.runs == 0 ? <h4>0</h4> :<h4>{ ((data.striker.runs/data.striker.balls)*100).toFixed(2) }</h4> }</td>
-                              </tr>
-                              <tr>
-                                  <td><h4>{ data.nonStriker.name }</h4></td>
-                                  <td><h4>{ data.nonStriker.runs }</h4></td>
-                                  <td><h4>{ data.nonStriker.balls }</h4></td>
-                                  <td><h4>{ data.nonStriker.fours }</h4></td>
-                                  <td><h4>{ data.nonStriker.sixes }</h4></td>
-                                  <td>{data.nonStriker.runs == 0 ? <h4>0</h4> :  <h4>{ ((data.nonStriker.runs/data.nonStriker.balls)*100).toFixed(2) }</h4>}</td>
-                              </tr>
-                              <tr>
-                                  <th>
-                                      <h5>Bowler</h5>
-                                  </th>
-                                  <th>
-                                      <h5>O</h5>
-                                  </th>
-                                  <th>
-                                      <h5>R</h5>
-                                  </th>
-                                  <th>
-                                      <h5>W</h5>
-                                  </th>
-                                  <th>
-                                      <h5>ER</h5>
-                                  </th>
-                              </tr>
-                              <tr>
-                                  <td><h3>{ data.bowler.name }</h3></td>
-                                  <td><h3>{ data.bowler.overs + data.bowler.ballsDelivered/10 }</h3></td>
-                                  <td><h3>{ data.bowler.runsGiven }</h3></td>
-                                  <td><h3>{ data.bowler.wicket }</h3></td>
-                                  <td>{data.bowler.runsGiven == 0 ? <h3>0</h3> :  <h3>{ ((data.bowler.runsGiven)/(data.bowler.overs + data.bowler.ballsDelivered/6)).toFixed(1) }</h3> }</td>
-                              </tr>
-                              </tbody>
-                          </table>
-                      </div>
-                      <div className={mps.section3}>
-                          <h6>This over:</h6>
+    <section className={s.navbarSection}>
+        <div className={s.parent}>
+            <div className={s.left}>
+            <h2><Link to="/">{data.batting}</Link></h2>
+            </div>
+            <div className={s.right}>
+            <h3 className={s.startMatch}>{data.bowling}</h3>
+            </div>
+        </div>
+    </section> 
+
+    <section className={mps.mainSection}>
+       <div className="container">
+           <div className={mps.parentSection}>
+               <div className={mps.parentTop}>
+                    <p id={mps.battingText}>{data.batting}</p>
+                    <p>CRR</p>
+                    <p>Target</p>
+                    <p>RR</p>
+                    <p id={mps.score}>{ data[data.batting].runs } - { data[data.batting].wickets } <span>({ data[data.batting].overs }.{ data[data.batting].balls })</span></p>
+                    <p>{ (data[data.batting].runs / parseFloat(data[data.batting].overs + data[data.batting].balls/6)).toFixed(2) }</p>
+                    <p>{!data.battingFirst ? <h5>{ data.toWin + 1 }</h5> : <h5>-</h5> }</p>
+                    <p>{!data.battingFirst ? calculateRRR(data) : <h5>-</h5> }</p>
+               </div>
+               <p className={mps.toWin}> {!data.battingFirst ? <h5>{ data.batting } needs { data.toWin - data[data.batting].runs +1 } runs in { data.overs*6 -  data[data.batting].overs*6 - data.bowler.ballsDelivered } balls </h5> : "First Inning" }</p>
+           </div>
+           <div className={mps.parentMiddle}>
+               <p className={mps.parentMiddleTop}>Batter</p>
+               <p className={mps.parentMiddleTop}>R</p>
+               <p className={mps.parentMiddleTop}>B</p>
+               <p className={mps.parentMiddleTop}>4s</p>
+               <p className={mps.parentMiddleTop}>6s</p>
+               <p className={mps.parentMiddleTop}>SR</p>
+               <p className={mps.parentMiddleBottom}>{ data.striker.name } *</p>
+                <p className={mps.parentMiddleBottom}>{ data.striker.runs }</p>
+                <p className={mps.parentMiddleBottom}>{ data.striker.balls }</p>
+                <p className={mps.parentMiddleBottom}>{ data.striker.fours }</p>
+                <p className={mps.parentMiddleBottom}>{ data.striker.sixes }</p>
+                <p className={mps.parentMiddleBottom}>{data.striker.runs == 0 ? <p>0</p> :<p>{ ((data.striker.runs/data.striker.balls)*100).toFixed(2) }</p> }</p>
+                <p className={mps.parentMiddleBottom}>{ data.nonStriker.name }</p>
+                <p className={mps.parentMiddleBottom}>{ data.nonStriker.runs }</p>
+                <p className={mps.parentMiddleBottom}>{ data.nonStriker.balls }</p>
+                <p className={mps.parentMiddleBottom}>{ data.nonStriker.fours }</p>
+                <p className={mps.parentMiddleBottom}>{ data.nonStriker.sixes }</p>
+                <p className={mps.parentMiddleBottom}>{data.nonStriker.runs == 0 ? <p>0</p> :<p>{ ((data.nonStriker.runs/data.nonStriker.balls)*100).toFixed(2) }</p> }</p>
+                <p className={mps.parentMiddleTop}>Bowler</p>
+               <p className={mps.parentMiddleTop}>O</p>
+               <p className={mps.parentMiddleTop}>R</p>
+               <p className={mps.parentMiddleTop}>W</p>
+               <p className={mps.parentMiddleTop}>ER</p>
+               <p></p>
+               <p className={mps.parentMiddleBottom}>{ data.bowler.name }</p>
+                <p className={mps.parentMiddleBottom}>{ data.bowler.overs + data.bowler.ballsDelivered/10 }</p>
+                <p className={mps.parentMiddleBottom}>{ data.bowler.runsGiven }</p>
+                <p className={mps.parentMiddleBottom}>{ data.bowler.wicket }</p>
+                <p className={mps.parentMiddleBottom}>{data.bowler.runsGiven == 0 ? <p>0</p> :  <p>{ ((data.bowler.runsGiven)/(data.bowler.overs + data.bowler.ballsDelivered/6)).toFixed(1) }</p> }</p>
+           </div>
+           <div className={mps.section3}>
+                          <p>This over:</p>
                             <div className={mps.timeline}>
                                 {data.bowler.timeline.map((t) => {
-                              return (<div className={mps.timeline_bowl}>
-                                  <h6>{ t.runs }{ t.extra }</h6>
+                              return (<div className={mps.timelineBowl}>
+                                  <p>{ t.runs }{ t.extra }</p>
                               </div>
                               )
                                 }) }
                             </div>
-                        </div>
-                        <div className={mps.section4}>
-                            <div className={mps.left_div}>
-                                <div className={mps.swapDiv} onClick = {(e) => swapBatsman()}><p>Swap</p></div>
-                                <div className={mps.swapDiv} onClick = {(e) => undo()}><p>Undo</p></div>
-                            </div>
-                            <div className={mps.right_div}>
-                                <div style={{display:'flex',flexWrap: 'wrap',height:'60%'}}>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>0</p></div>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>1</p></div>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>2</p></div>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>3</p></div>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>4</p></div>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>5</p></div>
-                                <div className={mps.runsDiv} onClick={(e) => handleClick(e) }><p style={{paddingTop:'8px',paddingLeft:'19px'}}>6</p></div>
+            </div>
+            <div className={mps.bottom}>
+                 <div className={mps.bottomLeft}>
+                    <button onClick = {(e) => swapBatsman()} id={mps.btnBottom} className="btn">Swap</button>
+                    <button onClick = {(e) => undo()} id={mps.btnBottom} className="btn">Undo</button>
+                 </div>
+                 <div className={mps.bottomRight}>
+                                <div className={mps.bottomRightTop}>
+                                <button className="btn" id={mps.btnRightBottom} onClick={(e) => handleClick(e) }><p>0</p></button>
+                                <button className="btn" id={mps.btnRightBottom}  onClick={(e) => handleClick(e) }><p>1</p></button>
+                                <button className="btn" id={mps.btnRightBottom}  onClick={(e) => handleClick(e) }><p>2</p></button>
+                                <button className="btn" id={mps.btnRightBottom}  onClick={(e) => handleClick(e) }><p>3</p></button>
+                                <button className="btn" id={mps.btnRightBottom}  onClick={(e) => handleClick(e) }><p>4</p></button>
+                                <button className="btn" id={mps.btnRightBottom}  onClick={(e) => handleClick(e) }><p>5</p></button>
+                                <button className="btn" id={mps.btnRightBottom}  onClick={(e) => handleClick(e) }><p>6</p></button>
                                 </div>
-                                <div>
-                                <label>
-                                <input
+                                <div className={mps.bottomRightBottom}>
+                                    <label>
+                                    <input
                                      type="checkbox"
                                     checked={extra.wide}
                                     onChange={handleWide}
-                                />
-                                Wide
-                                </label >
-                <label style={{marginLeft:'10px'}}>
-                <input
-                            type="checkbox"
-                            checked={extra.noBall}
-                            onChange={handleNoBall}
-                />
-                No ball
-                </label>
-                <label style={{marginLeft:'10px'}}>
-                <input
-                            type="checkbox"
-                            checked={extra.legBye}
-                            onChange={handleLegBye}
-                />
-                Leg byes
-                </label>
-                <label style={{marginLeft:'10px'}}>
-                <input
-                            type="checkbox"
-                            checked={extra.wicket}
-                            onChange={handleWicket}
-                />
-                Wicket
-                </label>
+                                    />
+                                    <p>Wide</p>
+                                    </label >
+                                    <label>
+                                    <input
+                                    type="checkbox"
+                                    checked={extra.noBall}
+                                    onChange={handleNoBall}
+                                    />
+                                    <p>No ball</p>
+                                    </label>
+                                    <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={extra.legBye}
+                                        onChange={handleLegBye}
+                                    />
+                                    <p>Leg byes</p>
+                                    </label>
+                                    <label>
+                                    <input
+                                         type="checkbox"
+                                        checked={extra.wicket}
+                                        onChange={handleWicket}
+                                    />
+                                    <p>Wicket</p>
+                                    </label>
                                 </div>
-                               
-                            </div>
-                        </div>
 
-                    </div>
-                    <div className={mps.section5}>
-                            {data.battingFirst ? <div className={mps.overDiv} onClick={handleOver}>Innings over</div>:<div className={mps.overDiv} onClick={gameOver}>Game over</div>}
-                                </div>
+                 </div>
+            </div>
+            <div className={mps.inningOver}>
+            {data.battingFirst ? <button className="btn" onClick={handleOver}>Innings over</button>:<button className="btn" onClick={gameOver}>Game over</button>}
+            </div>
+
+       </div>
+    </section>
                 </div>
             :<div>Loading...</div>
         }

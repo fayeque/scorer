@@ -1,4 +1,5 @@
 import React,{useState} from "react";
+import s from "./FirstDetail.module.css";
 // import fuzzySearch from "../utils/regEx";
 const NewBowler = ({data,setData,history,match,handleCallback}) => {
     const  [formData,setformData] = useState({
@@ -61,14 +62,15 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
       console.log(data);
     return (
         <div>
-        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-            {/* <input type="hidden" name="remember" defaultValue="true" /> */}
-            <div className="rounded-md shadow-sm -space-y-px">
-              <div>
-                <label htmlFor="email-address" className="sr-only">
-                  New Bowler
-                </label>
-                <input
+           <section className={s.ctaSection}>
+      <div className="container">
+        <div className={s.cta}>
+          <form className={s.ctaForm} onSubmit={onSubmit}>
+            <div>
+              <label for="Team1">
+                New Bowler
+              </label>
+              <input
                   value={bowler} onChange={(e) => onChange(e)}
                   id="email-address"
                   name="bowler"
@@ -77,25 +79,19 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="New Bowler"
                 />
-                {/* <div style={{position:'absolute',backgroundColor:"grey",marginLeft:'300px'}} className="showPlayers">
-                  {dt.length > 0 && dt.map((d) => {
-                    return <button onClick={(e) => onSubmit(e)}>{d.item}</button>
-                  })}
-                </div> */}
-              </div>
             </div>
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                </span>
-                Start Match
-              </button>
+            <button
+              type="submit"
+              className="btn btnForm">
+              Start Match
+            </button>
+            <div style={{'marginTop':'10rem'}}>
+            {data.battingFirst ? <button className="btn btnForm" onClick={handleOver}>Innings over</button>:<button className="btn btnForm" onClick={gameOver}>Game over</button>}
             </div>
-          </form>
-          {data.battingFirst ? <button onClick={handleOver}>Innings over</button>:<button onClick={gameOver}>Game over</button>}
+        </form>
+        </div>
+      </div>
+    </section>
         </div>
     )
 };

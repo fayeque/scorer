@@ -2,6 +2,7 @@ import axios from "axios";
 import React,{useState} from "react";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import s from "./Landing.module.css";
 
 
 const Landing = (props) => {
@@ -52,7 +53,7 @@ const Landing = (props) => {
             }
         }
         const body = JSON.stringify({data:props.data,id:id});
-        axios.post("/m",body,config);
+        axios.post("/",body,config);
           props.handleCallback(batting,bowling,overs,team1,team2,id);
           props.history.push(`/firstDetail/${id}`);
       }
@@ -62,43 +63,39 @@ const Landing = (props) => {
       }
 
     return (
-      <div style={{width:'80%',height:'100vh',margin:'auto'}}>
-        <form style={{height:'100vh'}} className="mt-8 space-y-6" onSubmit={onSubmit}>
-            {/* <input type="hidden" name="remember" defaultValue="true" /> */}
-            <div  style={{height:'100vh'}} className="rounded-md shadow-sm -space-y-px">
+      <section className={s.ctaSection}>
+        <div className="container">
+          <div className={s.cta}>
+            <form className={s.ctaForm} onSubmit={onSubmit}>
               <div>
-                <label htmlFor="email-address" className="sr-only">
+                <label for="Team1">
                   Team1
                 </label>
                 <input
                   value={team1} onChange={(e) => onChange(e)}
-                  id="email-address"
+                  id="Team1"
                   name="team1"
                   type="string"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Team1"
                 />
               </div>
-              <div style={{marginTop:'20px'}}>
-                <label htmlFor="password" className="sr-only">
+              <div>
+                <label for="team2">
                     Team2
                 </label>
                 <input
                   value={team2} 
                   onChange={(e) => onChange(e)}
-                  id="password"
+                  id="Team2"
                   name="team2"
                   type="String"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="team2"
+                  placeholder="Team2"
                 />
               </div>
               <div>
-            <h5>
-              Batting team
-            </h5>
+                <label for="batting team">Batting team</label>
             <select required value={formData.batting} 
             onChange={(e) => {handleBatting(e)}} >
             <option value="">Please Select</option>
@@ -106,35 +103,30 @@ const Landing = (props) => {
             <option value={formData.team2}>{formData.team2}</option>
             </select>
             </div>
-              <div style={{marginTop:'20px'}}>
-                <label htmlFor="password" className="sr-only">
+            <div>
+                <label for="overs">
                     Overs
                 </label>
                 <input
                   value={overs} 
                   onChange={(e) => onChange(e)}
-                  id="password"
+                  id="overs"
                   name="overs"
                   type="Number"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="overs"
+                  placeholder="Overs"
                 />
               </div>
-           
-            <div style={{marginTop:'20px'}}>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                </span>
+                className="btn btnForm">
                 Start Match
               </button>
-            </div>
-            </div>
           </form>
+          </div>
         </div>
+      </section>
+
     )
 }
 

@@ -14,7 +14,9 @@ import Allmatches from './components/Allmatches';
 import MatchDetails from './components/MatchDetails';
 import Navbar from './components/Navbar';
 import SecondInning from './components/SecondInning';
-
+import PublicAllMatches from './components/PublicAllMatches';
+import PublicMatchDetails from './components/PublicMatchDetail';
+import PublicMainPage from './components/PublicMainPage';
 var his = [];
 
 function App(props) {
@@ -83,6 +85,7 @@ function App(props) {
 
     if(d.length > 0){
       data.bowler = d[0];
+      data.bowler.timeline=[];
       data[data.bowling].bowlers.splice(idx,1);
     }else{
       data.bowler.name=bowler;
@@ -101,14 +104,38 @@ function App(props) {
   return (
     <div className="App">
       {/* {!loading ? */}
-      <Navbar />
+      
       <Router>
+        {console.log("app.js")}
+        {/* <Navbar /> */}
         <Switch>
-        <Route exact path="/" render={ 
+        <Route exact path="/mainPage/:matchId" render={(props) => {
+            return <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
+          }
+        }
+        
+            // props => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
+          ></Route> 
+        <Route exact path="/public/mainPage/:matchId" render={(props) => {
+            return <PublicMainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
+          }
+        }
+        
+            // props => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
+          ></Route> 
+          <div>
+          <Navbar />
+          <Route exact path="/" render={ 
             props => <Allmatches {...props} setData={setData} handleCallback={handleCallback} />
+          }></Route>
+          <Route exact path="/public" render={ 
+            props => <PublicAllMatches {...props} setData={setData} handleCallback={handleCallback} />
           }></Route>
           <Route exact path="/matchDetails/:matchId" render={ 
             props => <MatchDetails {...props} setData={setData} handleCallback={handleCallback} />
+          }></Route>
+          <Route exact path="/public/matchDetails/:matchId" render={ 
+            props => <PublicMatchDetails {...props} setData={setData} handleCallback={handleCallback} />
           }></Route>
           <Route exact path="/start" render={ 
             props => <Landing {...props} data={data} setData={setData} handleCallback={handleCallback} />
@@ -119,12 +146,7 @@ function App(props) {
           <Route exact path="/secondInningsFirstDetails/:matchId" render={ 
             props => <SecondInning {...props} data={data} setData={setData} handleCallback={handleFirstDetail} />
           }></Route> 
-          <Route exact path="/mainPage/:matchId" render={(props) => {
-            return <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
-          }
-        }
-            // props => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
-          ></Route> 
+
           <Route exact path="/newBowler/:matchId" render={ 
             props => <NewBowler {...props} setData={setData} data={data} handleCallback={handleBowler} />
           }></Route> 
@@ -134,6 +156,7 @@ function App(props) {
             <Route exact path="/matchSummary/:matchId" render={ 
             props => <MatchSummary {...props} data={data} />
           }></Route> 
+          </div>
         </Switch>
       </Router>
   {/* :<div>Loading...</div>} */}

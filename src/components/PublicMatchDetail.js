@@ -3,15 +3,20 @@ import { useState } from "react";
 import { useEffect } from "react";
 import md from "./MatchDetails.module.css"
 import mps from "./MainPage.module.css"
+import axios from "axios";
 
-const MatchDetails = (props) => {
+const PublicMatchDetails = (props) => {
     const [data,setData] = useState(null);
     const [loading,setLoading] = useState(true);
     useEffect(() => {
-        var d=JSON.parse(localStorage.getItem('data'));
-        var currentMatch = d[props.match.params.matchId];
-        setData(currentMatch);
-        setLoading(false)
+        const getData = async () => {
+                const {data} = await axios.get(`/match/scorecard/${props.match.params.matchId}`);
+                console.log("dataa",data);
+                setData(data.data);
+                setLoading(false);
+            }
+            getData();
+        
     },[])
     console.log(data);
     return(
@@ -125,4 +130,4 @@ const MatchDetails = (props) => {
     )
 }
 
-export default MatchDetails;
+export default PublicMatchDetails;

@@ -5,6 +5,8 @@ var mongoose = require("mongoose");
 var cors=require("cors");
 var path=require('path');
 const Match = require("./models/Match");
+var util= require('util');
+var encoder = new util.TextEncoder('utf-8');
 // var flash=require("connect-flash");
 // var Player = require("./models/Player");
 
@@ -38,17 +40,11 @@ app.set("view engine","ejs");
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/', function(req, res) {
-    // console.log(path.join(__dirname, '../build', 'index.html'));
-     res.sendFile(path.join(__dirname, '../build', 'index.html'));
-});
-
-
-
  app.get("/m",async (req,res) => {
     var matches= await Match.find({matchStarted:true}).sort({createdAt:-1});
     // console.log(matches[0].details[matches[0].details.batting]);
-    res.render('home.ejs',{matches:matches});
+    // res.render('home.ejs',{matches:matches});
+    res.json({matches});
     // res.render('publicLanding',{players:players,tcm:tcm,acm:amountCollected,totalPlayers:totalPlayers,playersAttend:playersAttend});
  });
 
@@ -78,13 +74,20 @@ app.get('/', function(req, res) {
 app.get("/match/:matchId",async (req,res) => {
     var d=await Match.findOne({matchId:req.params.matchId});
     console.log(d);
-    res.render('details',{data:d.details});
+    // res.render('details',{data:d.details});
+    res.json({d});
 })
 
 app.get("/match/scorecard/:matchId",async (req,res) => {
     var d=await Match.findOne({matchId:req.params.matchId});
-    res.render("scorecard",{data:d.details});
+    res.json({data:d.details});
+    // res.render("scorecard",{data:d.details});
 })
+
+app.get('*', function(req, res) {
+    // console.log(path.join(__dirname, '../build', 'index.html'));
+     res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 
 app.listen(PORT,() => console.log(`Server started at ${PORT}`));

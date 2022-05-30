@@ -1,7 +1,7 @@
 import React,{useState} from "react";
 import { useEffect } from "react";
 import { Router } from "react-router-dom";
-
+import s from "./FirstDetail.module.css";
 
 const SecondInning = (props) => {
     const  [formData,setformData] = useState({
@@ -26,15 +26,15 @@ const SecondInning = (props) => {
       }
       console.log(props.data);
     return (
-        <div style={{width:'80%',margin:'auto'}}>
-        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-            {/* <input type="hidden" name="remember" defaultValue="true" /> */}
-            <div className="rounded-md shadow-sm -space-y-px">
-              <div>
-                <label htmlFor="email-address" className="sr-only">
-                  Striker
-                </label>
-                <input
+      <section className={s.ctaSection}>
+      <div className="container">
+        <div className={s.cta}>
+          <form className={s.ctaForm} onSubmit={onSubmit}>
+            <div>
+              <label for="Team1">
+                Striker
+              </label>
+              <input
                   value={striker} onChange={(e) => onChange(e)}
                   id="email-address"
                   name="striker"
@@ -43,12 +43,12 @@ const SecondInning = (props) => {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Striker"
                 />
-              </div>
-              <div>
-                <label htmlFor="password" className="sr-only">
-                    Non-striker
-                </label>
-                <input
+            </div>
+            <div>
+              <label for="team2">
+                  Non Striker
+              </label>
+              <input
                   value={nonStriker} 
                   onChange={(e) => onChange(e)}
                   id="password"
@@ -58,12 +58,12 @@ const SecondInning = (props) => {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Non-striker"
                 />
-              </div>
-              <div>
-                <label htmlFor="password" className="sr-only">
-                    Bowler
-                </label>
-                <input
+            </div>
+            <div>
+              <label for="overs">
+                  Bowler
+              </label>
+              <input
                   value={bowler} 
                   onChange={(e) => onChange(e)}
                   id="password"
@@ -73,20 +73,16 @@ const SecondInning = (props) => {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Bowler"
                 />
-              </div>
             </div>
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                </span>
-                Start Match
-              </button>
-            </div>
-          </form>
+            <button
+              type="submit"
+              className="btn btnForm">
+              Start Match
+            </button>
+        </form>
         </div>
+      </div>
+    </section>
     )
 }
 

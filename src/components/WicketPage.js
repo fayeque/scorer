@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import fuzzySearch from "../utils/regEx";
+import s from "./FirstDetail.module.css";
 
 const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
     const [selected,setSelected] = useState(null);
@@ -129,14 +130,13 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
         if(selected == "Runout"){
             return (
                 <div>
-            <form style={{height:'80vh'}} className="mt-4 space-y-6" onSubmit={onSubmit}>
-            {/* <input type="hidden" name="remember" defaultValue="true" /> */}
-            <div className="rounded-md shadow-sm -space-y-px">
+        <div className={s.cta}>
+          <form className={s.ctaForm} onSubmit={onSubmit}>
             <div>
-                <label htmlFor="email-address" className="sr-only">
-                  New Batsman
-                </label>
-                <input
+              <label for="Team1">
+                New Batsman
+              </label>
+              <input
                   value={batsman.newBatsman} onChange={(e) => onChange(e)}
                   id="email-address"
                   name="newBatsman"
@@ -145,60 +145,44 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="New Batsman"
                 />
-                {/* <div style={{position:'absolute',backgroundColor:"grey",marginLeft:'300px'}} className="showPlayers">
-                  {fdata.length > 0 && fdata.map((d) => {
-                    return <div onClick={(e) => setIt(e)}>{d.item}</div>
-                  })}
-                </div> */}
-              </div>
-                <div style={{height:'50px'}}>
-                <h5 htmlFor="email-address">
-                  Who got out
-                </h5>
+            </div>
+            <div>
+                <label for="batting team">Who got out</label>
                 <select value={out} 
                 onChange={(e) => {handleOut(e)}} >
                 <option value="">Please Select</option>
                 <option value={data.striker.name}>{data.striker.name}</option>
                 <option value={data.nonStriker.name}>{data.nonStriker.name}</option>
                 </select>
-                </div>
- 
-              <div>
-                <h5 htmlFor="email-address">
-                  Who is on Strike
-                </h5>
+            </div>
+            <div>
+                <label for="batting team">Who is on strike</label>
                 <select value={strike} 
                 onChange={(e) => {handleOnStrike(e)}} >
                 <option value="">Please Select</option>
                 <option value={left[0]}>{left[0]}</option>
                 <option value={left[1]}>{left[1]}</option>
                 </select>
-                </div>
             </div>
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                </span>
-                Continue
-              </button>
-            </div>
-          </form>
+            <button
+              type="submit"
+              className="btn btnForm">
+              Continue
+            </button>
+        </form>
+        </div>
                 </div>
             )
         }else{
           return (
             <div>
-        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
-        {/* <input type="hidden" name="remember" defaultValue="true" /> */}
-        <div className="rounded-md shadow-sm -space-y-px">
-          <div>
-            <h5 htmlFor="email-address" >
-              New Batsman
-            </h5>
-            <input
+               <div className={s.cta}>
+          <form className={s.ctaForm} onSubmit={onSubmit}>
+            <div>
+              <label for="Team1">
+                New Batsman
+              </label>
+              <input
               value={batsman.newBatsman} onChange={(e) => onChange(e)}
               id="email-address"
               name="newBatsman"
@@ -207,16 +191,9 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
               className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
               placeholder="New Batsman"
             />
-            {/* <div style={{position:'absolute',backgroundColor:"grey",marginLeft:'300px'}} className="showPlayers">
-              {fdata.length > 0 && fdata.map((d) => {
-                return <div onClick={(e) => setIt(e)}>{d.item}</div>
-              })}
-            </div> */}
-          </div>
-          <div>
-            <h5>
-              Who is on Strike
-            </h5>
+            </div>
+            <div>
+                <label for="batting team">Who is on strike?</label>
             <select value={strike} 
             onChange={(e) => {handleOnStrike(e)}} >
             <option value="">Please Select</option>
@@ -224,36 +201,33 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
             <option value={batsman.newBatsman}>{batsman.newBatsman}</option>
             </select>
             </div>
+            <button
+              type="submit"
+              className="btn btnForm">
+              Continue
+            </button>
+        </form>
         </div>
-        <div>
-          <button
-            type="submit"
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-            </span>
-            Continue
-          </button>
-        </div>
-      </form>
             </div>
         )
         }
     }
     console.log(selected);
     return (
-        <div style={{width:'80%',margin:'auto'}}>
-      <select 
-        style={{width:'80%',marginTop:'20px'}}
-        value={selected} 
-        onChange={(e) => {handleChange(e)}} 
-      >
-        <option value="">Please Select</option>
-       <option value="Runout">Runout</option>
-        <option value="Other">Other</option>
-      </select>
-        {selected && showFields()}
+      <section className={s.ctaSection}>
+        <div className="container">
+        <div className={s.ctaForm}>
+                <label for="batting team">Kaise out hua?</label>
+                <select value={selected} 
+                onChange={(e) => {handleChange(e)}}  >
+                        <option value="">Please Select</option>
+                        <option value="Runout">Runout</option>
+                        <option value="Other">Other</option>
+                </select>
+          </div>
+          {selected && showFields()}
         </div>
+      </section>
     )
 }
 

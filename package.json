@@ -1,12 +1,13 @@
 {
   "name": "scorer",
   "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
+    "compression": "^1.7.4",
+    "express": "^4.17.3",
     "fuse": "^0.4.0",
     "fuse.js": "^6.5.3",
     "react": "^17.0.2",
@@ -38,11 +39,6 @@
       "last 1 safari version"
     ]
   },
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
-  "main": "server.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^10.4.4",
     "postcss": "^8.4.12",
