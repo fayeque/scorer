@@ -122,13 +122,13 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 6rem;
 }
 
 .bottomRightBottom{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    row-gap: 1rem;
+    row-gap: 1.2rem;
 }
 
 .bottomRightBottom label{
@@ -149,6 +149,16 @@
 
 .inningOver{
     margin-top: 3rem;
+}
+
+.bottomRightBottom label input{
+    width: 2.8rem;
+    height: 2.8rem;
+}
+
+.extraDimension{
+    width: 2.6rem !important;
+    height: 2.6rem !important;
 }
 
 

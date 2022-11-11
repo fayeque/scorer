@@ -44,6 +44,9 @@ const handleEvent = (extra,data,val,history,his,handleBowler,matchId) => {
     data.striker.runs += val;
     data[data.batting].balls += 1;
     data.striker.balls += 1;
+    if(val==0){
+        data.striker.dot += 1;
+    }
     if(val == 4){
         data.striker.fours += 1;
     }

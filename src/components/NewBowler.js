@@ -1,5 +1,6 @@
 import React,{useState} from "react";
 import s from "./FirstDetail.module.css";
+import axios from "axios";
 // import fuzzySearch from "../utils/regEx";
 const NewBowler = ({data,setData,history,match,handleCallback}) => {
     const  [formData,setformData] = useState({
@@ -12,7 +13,7 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
         // console.log(fuzzySearch(formData.bowler));
         // setDt(fuzzySearch(formData.bowler));
       };
-
+//
       const onSubmit = (e) => {
             e.preventDefault();
             console.log(e.target.innerText);
@@ -32,7 +33,7 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
         nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
         history.push(`/firstDetail/${match.params.matchId}`);
     }
-    const gameOver = (e) => {
+    const gameOver = async (e) => {
         data[data.batting].batsmans.push(data.striker);
         data[data.batting].batsmans.push(data.nonStriker);
         if(data.bowler.name != " "){
@@ -55,6 +56,14 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
         d[match.params.matchId]=data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
+        const config={
+          headers:{
+              'Content-Type':'application/json'
+          }
+      }
+      const body = JSON.stringify(data);
+      await axios.post(`/match/${match.params.matchId}`,body,config);
+      await axios.post("http://localhost:5000/generateReport",body,config);
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered >= 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0}});
         history.push(`/matchSummary/${match.params.matchId}`);
         // console.log(data);

@@ -114,7 +114,7 @@ function App(props) {
           }
         }
         
-            // props => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
+            // prop => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
           ></Route> 
         <Route exact path="/public/mainPage/:matchId" render={(props) => {
             return <PublicMainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />

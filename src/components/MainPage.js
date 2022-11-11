@@ -46,7 +46,8 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
 
     const handleEven = (val) => {
         handleEvent(extra,data,val,history,his,handleBowler,match.params.matchId);
-        if(data.bowler.ballsDelivered == 0){
+    // bug fix 11_nov_22
+        if(data.bowler.ballsDelivered == 0 && (!extra.wide && !extra.noBall && !extra.legBye)){
             swapStrikers(data);
         }
         var d=JSON.parse(localStorage.getItem('data'));
@@ -60,6 +61,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         }
         const body = JSON.stringify(data);
         axios.post(`/match/${match.params.matchId}`,body,config);
+        //  axios.post("http://localhost:5000/generateReport",body,config);
         setData({...data});
         setExtra({...extra,wide:false,noBall:false,legBye:false,wicket:false});
         console.log(his);
@@ -69,6 +71,9 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         handleEvent(extra,data,val,history,his,handleBowler,match.params.matchId);
         if(!extra.wicket && !data.bowler.ballsDelivered == 0){
             swapStrikers(data)
+        }
+        if(data.bowler.ballsDelivered == 0 && (extra.wide || extra.noBall || extra.legBye)){
+            swapStrikers(data);
         }
         var d=JSON.parse(localStorage.getItem('data'));
         d[match.params.matchId]=data;
@@ -180,7 +185,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
         history.push(`/firstDetail/${match.params.matchId}`);
     }
-    const gameOver = (e) => {
+    const gameOver = async (e) => {
         data[data.batting].batsmans.push(data.striker);
         data[data.batting].batsmans.push(data.nonStriker);
         if(data.bowler.name != " "){
@@ -209,7 +214,9 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        axios.post(`/match/${match.params.matchId}`,body,config);
+        await axios.post(`/match/${match.params.matchId}`,body,config);
+        await axios.post("http://localhost:5000/generateReport",body,config);
+
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered >= 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
         ,nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
         history.push(`/matchSummary/${match.params.matchId}`);
@@ -326,6 +333,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
                                     <label>
                                     <input
                                      type="checkbox"
+                                     id={mps.extraDimension}
                                     checked={extra.wide}
                                     onChange={handleWide}
                                     />

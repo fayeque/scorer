@@ -7,7 +7,7 @@ import am from "./Allmatches.module.css";
 const Allmatches = (props) => {
     const [matches,setMatches] = useState([]);
     useEffect(() => {
-        if(localStorage.getItem('data')){
+        if(localStorage.getItem('data') != null){
         var d=JSON.parse(localStorage.getItem('matchId'));
         var mtch = JSON.parse(localStorage.getItem('data'));
         var m=d.map((dt) => {
@@ -43,9 +43,9 @@ const Allmatches = (props) => {
                         <p>{mId.match[mId.match.bowling].runs}/{mId.match[mId.match.bowling].wickets} ({mId.match[mId.match.bowling].overs}.{mId.match[mId.match.bowling].balls})</p>
                     </div>
                     </div>
-                     {!mId.match.gameOver && !mId.match.battingFirst ? <p className={am.toWin}>
+                    {!mId.match.gameOver && !mId.match.battingFirst ? <p className={am.toWin}>
                      {mId.match.batting} needs {mId.match.toWin - mId.match[mId.match.batting].runs +1} runs in {mId.match.overs*6 -  mId.match[mId.match.batting].overs*6 - mId.match.bowler.ballsDelivered} balls
-                     </p> : <p className={am.toWin}>First inning is in progress</p>}
+                     </p> : ( mId.match.gameOver ? <p className={am.toWin}>{mId.match.winner}  wins</p>:<p className={am.toWin}>First inning is in progress</p>)}
                      <div className={am.bottom}>
                      <p onClick={(e) => onCLick(e,mId.id)} key={i}>
                         View Scorecard

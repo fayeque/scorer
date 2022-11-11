@@ -19,6 +19,8 @@
 
 .navbarSection{
     /* padding: 1.8rem 0; */
+    background: url("https://i.pinimg.com/736x/72/5f/38/725f38e0a030ded0e6ac9ce46532e996.jpg") no-repeat;
+    background-size: contain;
     background-color: #2b2c2d;
     position: relative;
     z-index: 0;
@@ -36,11 +38,15 @@
 }
 
 .superParentBlack{
-    background-color: #2b2c2d;
+    /* background-color: #2b2c2d; */
+    box-shadow: 0 2.4rem 4.8rem rgb(0 0 0 / 15%);
+    border-bottom: 1px solid white;
 }
 
 .superParentMaroon{
-    background-color: #b40000;
+    /* background-color: #b40000; */
+    box-shadow: 0 2.4rem 4.8rem rgb(0 0 0 / 15%);
+    border-bottom: 1px solid white;
 }
 
 .parent h2{
