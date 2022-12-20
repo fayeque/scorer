@@ -68,7 +68,7 @@ html {
 
   /* 10px / 16px = 0.625 = 62.5% */
   /* Percentage of user's browser font-size setting */
-  font-size: 45%;
+  font-size: 40%;
   overflow-x: hidden;
 
   /* Does NOT work on Safari */
@@ -80,17 +80,19 @@ body {
   line-height: 1;
   font-weight: 300;
   color: #555;
-
+  min-height: 100vh;
   /* Only works if there is nothing absolutely positioned in relation to body */
   overflow-x: hidden;
   /* background: url("https://i.pinimg.com/736x/72/5f/38/725f38e0a030ded0e6ac9ce46532e996.jpg") no-repeat; */
   background: url("https://t4.ftcdn.net/jpg/03/90/66/17/360_F_390661775_BY3omV6LTS2064GbghxN9MBxgp4oV67W.jpg") no-repeat;
   background-size: cover;
+  /* background-position: center center; */
+  /* background-attachment: fixed; */
 }
-html,body{
-  width: 100%;
-  height: 100%;
-}
+/* html{
+  min-height: 100;
+
+} */
 
 .container {
   /* 1140px */

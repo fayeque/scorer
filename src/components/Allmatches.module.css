@@ -26,10 +26,6 @@
     z-index: 0;
 }
 
-.allMatchSection{
-    /* margin-top: 2rem; */
-    /* padding: 2rem 0; */
-}
 .parent{
     display: flex;
     /* justify-content: flex-end; */
@@ -67,7 +63,7 @@
 .left{
     width: 50%;
     text-align: center;
-    position: relative;
+    /* position: relative; */
     /* padding: 2rem 0; */
 }
 
@@ -120,6 +116,9 @@
     font-weight: 500;
     color: white;
     margin-bottom: 2rem;
+    border: 2px white solid;
+    padding: 1rem;
+    border-radius: 2rem;
 }
 
 .date{
@@ -128,5 +127,12 @@
     color: white;
     text-align: center;
     padding: 1rem 0 0 0;
+}
+
+.privelage{
+    /* margin-top: 2.6rem; */
+    font-size: 1.4rem;
+    padding: 2rem 1rem;
+    color:white;
 }
 

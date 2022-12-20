@@ -38,11 +38,25 @@
     z-index: -2;
 }
 
+.parent2{
+    display: flex;
+    /* background-color: #b40000; */
+    /* justify-content: flex-end; */
+    /* align-items: center; */
+}
+
 .parent h2{
     font-size: 1.8rem;
     font-weight: 600;
     color: white;
     padding: 2rem 1rem;
+}
+
+.parent2 h3{
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: white;
+    padding: 2.6rem 1rem;
 }
 
 .startMatch{
@@ -59,6 +73,17 @@
     text-align: center;
     position: relative;
 }
+
+.left2{
+    width: 40%;
+    /* height: 100%; */
+    background-color:#b40000;
+    /* text-align: center; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .left::before{
     content: "";
     position: absolute;
@@ -76,8 +101,22 @@
     text-align: center;
 }
 
+.right2
+{
+    width: 40%;
+    /* text-align: center; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .parent p{
     font-size: 1.6rem;
     font-weight: 500;
     color: white;
+}
+
+.imageContainer{
+    width: 20%;
+    /* height: 100%; */
 }

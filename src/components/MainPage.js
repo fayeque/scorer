@@ -8,6 +8,7 @@ import fuzzySearch from "../utils/regEx";
 import axios from 'axios';
 import mps from "./MainPage.module.css";
 import s from "./Navbar.module.css";
+import fd from "./FirstDetail.module.css";
 
 const MainPage = ({data,setData,history,handleBowler,his,match}) => {
 
@@ -44,6 +45,19 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
     setLoading(false);
     },[])
 
+    const handleOut = (e) => {
+        if(e.target.value == "Yes"){
+            handleOver();
+            history.push(`/firstDetail/${match.params.matchId}`);
+        }
+    }
+
+    const handleGameOver = (e) => {
+        if(e.target.value == "Yes"){
+            gameOver();
+            history.push(`/matchSummary/${match.params.matchId}`);
+        }
+    }
     const handleEven = (val) => {
         handleEvent(extra,data,val,history,his,handleBowler,match.params.matchId);
     // bug fix 11_nov_22
@@ -367,8 +381,30 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
 
                  </div>
             </div>
-            <div className={mps.inningOver}>
-            {data.battingFirst ? <button className="btn" onClick={handleOver}>Innings over</button>:<button className="btn" onClick={gameOver}>Game over</button>}
+
+            <div className={fd.ctaForm}>
+            {data.battingFirst ?
+            <div>
+                <label for="batting team">Inning over?</label>
+                <select
+                onChange={(e) => {handleOut(e)}} >
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+                
+                </select>
+            </div>
+            :
+            <div>
+            <label for="batting team">Game Over?</label>
+            <select
+            onChange={(e) => {handleGameOver(e)}} >
+            <option value="">Please Select</option>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            </select>
+            </div>
+            }
+            {/* {data.battingFirst ? <button className="btn" onClick={handleOver}>Innings over</button>:<button className="btn" onClick={gameOver}>Game over</button>} */}
             </div>
 
        </div>

@@ -62,7 +62,7 @@ const PublicMainPage = ({data,setData,history,handleBowler,his,match}) => {
                     <p>RR</p>
                     <p id={mps.score}>{ data[data.batting].runs } - { data[data.batting].wickets } <span>({ data[data.batting].overs }.{ data[data.batting].balls })</span></p>
                     <p>{ (data[data.batting].runs / parseFloat(data[data.batting].overs + data[data.batting].balls/6)).toFixed(2) }</p>
-                    <p>{!data.battingFirst ? <h5>{ data.toWin }</h5> : <h5>-</h5> }</p>
+                    <p>{!data.battingFirst ? <h5>{ data.toWin + 1 }</h5> : <h5>-</h5> }</p>
                     <p>{!data.battingFirst ? calculateRRR(data) : <h5>-</h5> }</p>
                </div>
                <p className={mps.toWin}> {!data.battingFirst ? <h5>{ data.batting } needs { data.toWin - data[data.batting].runs +1 } runs in { data.overs*6 -  data[data.batting].overs*6 - data.bowler.ballsDelivered } balls </h5> : "First Inning" }</p>

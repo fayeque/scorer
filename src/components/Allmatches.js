@@ -1,15 +1,22 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Route, Redirect } from 'react-router';
 // import s from "./Navbar.module.css";
 import am from "./Allmatches.module.css";
 
 const Allmatches = (props) => {
     const [matches,setMatches] = useState([]);
     useEffect(() => {
+        if(localStorage.getItem('privelage') == null || localStorage.getItem('privelage') != 'tarbangla'){
+            console.log('redirect to public');
+            props.history.push("/public");
+        }
+        else{
         if(localStorage.getItem('data') != null){
         var d=JSON.parse(localStorage.getItem('matchId'));
         var mtch = JSON.parse(localStorage.getItem('data'));
+        d.reverse();
         var m=d.map((dt) => {
             console.log(mtch[dt]);
             if(mtch[dt]){
@@ -19,6 +26,7 @@ const Allmatches = (props) => {
         console.log(m);
         setMatches([...m]);
     }
+}
     },[]);
     const onCLick = (e,id) => {
         props.history.push(`/matchDetails/${id}`);
@@ -33,7 +41,7 @@ const Allmatches = (props) => {
                 return (
                     <div className={i%2==0 ? am.superParentBlack : am.superParentMaroon}>
                     <p className={am.date}>{mId.match.date.split("T")[0]}</p>
-                    <div key={Math.floor(Math.random()*1000)} className={am.parent}>
+                    <div key={Math.floor(Math.random()*100000)} className={am.parent}>
                     <div className={am.left}>
                         <p>{mId.match.batting}</p>
                         <p>{mId.match[mId.match.batting].runs}/{mId.match[mId.match.batting].wickets} ({mId.match[mId.match.batting].overs}.{mId.match[mId.match.batting].balls})</p>

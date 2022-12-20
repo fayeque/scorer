@@ -17,6 +17,9 @@ import SecondInning from './components/SecondInning';
 import PublicAllMatches from './components/PublicAllMatches';
 import PublicMatchDetails from './components/PublicMatchDetail';
 import PublicMainPage from './components/PublicMainPage';
+import AdminSignin from './components/AdminSignin';
+import OrangeCap from './components/OrangeCap';
+import PurpleCap from './components/PurpleCap';
 var his = [];
 
 function App(props) {
@@ -128,6 +131,9 @@ function App(props) {
           <Route exact path="/" render={ 
             props => <Allmatches {...props} setData={setData} handleCallback={handleCallback} />
           }></Route>
+         <Route exact path="/adminSignin" render={ 
+            props => <AdminSignin {...props} />
+          }></Route>
           <Route exact path="/public" render={ 
             props => <PublicAllMatches {...props} setData={setData} handleCallback={handleCallback} />
           }></Route>
@@ -155,6 +161,12 @@ function App(props) {
           }></Route> 
             <Route exact path="/matchSummary/:matchId" render={ 
             props => <MatchSummary {...props} data={data} />
+          }></Route> 
+          <Route exact path="/public/orangeCap" render={ 
+            props => <OrangeCap {...props} />
+          }></Route> 
+          <Route exact path="/public/purpleCap" render={ 
+            props => <PurpleCap {...props} />
           }></Route> 
           </div>
         </Switch>

@@ -45,12 +45,12 @@ const PublicAllMatches = (props) => {
                     <p className={am.date}>{mId.details.date.split("T")[0]}</p>
                     <div key={Math.floor(Math.random()*1000)} className={am.parent}>
                     <div className={am.left}>
-                        <p>{mId.details.batting}</p>
-                        <p>{mId.details[mId.details.batting].runs}/{mId.details[mId.details.batting].wickets} ({mId.details[mId.details.batting].overs}.{mId.details[mId.details.batting].balls})</p>
-                    </div>
-                    <div className={am.right}>
                         <p>{mId.details.bowling}</p>
                         <p>{mId.details[mId.details.bowling].runs}/{mId.details[mId.details.bowling].wickets} ({mId.details[mId.details.bowling].overs}.{mId.details[mId.details.bowling].balls})</p>
+                    </div>
+                    <div className={am.right}>
+                        <p>{mId.details.batting}</p>
+                        <p>{mId.details[mId.details.batting].runs}/{mId.details[mId.details.batting].wickets} ({mId.details[mId.details.batting].overs}.{mId.details[mId.details.batting].balls})</p>
                     </div>
                     </div>
                      {!mId.details.gameOver && !mId.details.battingFirst ? <p className={am.toWin}>
@@ -67,7 +67,12 @@ const PublicAllMatches = (props) => {
                      </div>
                 )
             })}
-        
+            <div className={am.bottom} >
+                    <button className={am.privelage} onClick={(e) => props.history.push(`/adminSignin`)}>
+                        Sign in as Admin
+                    </button>
+                   
+            </div>
     </section>  
         </div>
     )

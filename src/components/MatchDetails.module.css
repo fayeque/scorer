@@ -54,8 +54,35 @@
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
     row-gap: 1rem;
-    margin-bottom: 2.4rem;
+    padding: 1.4rem 1rem;
+    margin-bottom: 1.6rem;
+    background-color: white;
+    border-radius: 0.8rem;
+    border: 2px black solid;
+    align-items: center;
 }
+
+.parentMiddle2{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 1rem;
+    padding: 1.4rem 1rem;
+    margin-bottom: 1.6rem;
+    background-color: white;
+    border-radius: 0.8rem;
+    border: 2px black solid;
+    align-items: center;
+}
+
+.parentMiddle2:nth-child(2){
+
+    background-color: navy;
+}
+
+.parentMiddle2:nth-child(2) p{
+    color: white;
+}
+
 
 .parentMid{
     display: grid;
@@ -66,20 +93,21 @@
 .parentMiddleTop{
     font-size: 1.6rem;
     font-weight: 400;
-    color: white;
-
+    color: navy;
 }
+
+
 
 .parentMiddleBottom{
     font-size: 2rem;
     font-weight: 600;
-    color: white;
+    color: navy;
 }
 
 .parentMiddleBottomOutBy{
     font-size: 1.2rem;
     font-weight: 400;
-    color: white;
+    color: navy;
 }
 
 .section3 p{
@@ -182,7 +210,55 @@
     padding: 0 1rem;
 }
 
+.mainContent2{
+    padding: 0 1rem;
+} 
+.mainContentOrangeCap{
+    padding: 1rem 1rem;
+}
 
+
+.ctaForm
+{
+    width: 80%;
+    padding: 0.8rem;
+    font-size: 1.4rem;
+    font-family: inherit;
+    color: black;
+    border: none;
+    background-color: white;
+    border-radius: 9px;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+    margin-bottom: 0.8rem;
+}
+
+.ctaForm *:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.8rem rgba(253, 242, 233, 0.5);
+}
+
+.updation{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+}
+
+.updationButton {
+    width: 50%;
+    padding: 1rem 1rem;
+    border: 2px black solid;
+    margin-left: 1.4rem;
+    color: white;
+    margin-bottom: 1.4rem;
+    background-color: black;
+}
+
+/* .background{
+    background: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROx1BMpHwbH_-IxLV0tgFfv5-tjgKQN18DFg&usqp=CAU") no-repeat;
+    background-size:100% 100%;
+} */
 
 
 

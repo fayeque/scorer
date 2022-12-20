@@ -15,10 +15,28 @@ return (
     <section className={s.navbarSection}>
         <div className={s.parent}>
             <div className={s.left}>
-                {window.location.pathname.includes('public') ? <h2><Link to="/public">Tarbangla Sporting</Link></h2> : <h2><Link to="/">Tarbangla Sporting</Link></h2> }
+                {localStorage.getItem('privelage') == null || localStorage.getItem('privelage') != 'tarbangla' 
+                ? <h2><Link to="/public">Tarbangla Sporting</Link></h2> : 
+                <h2><Link to="/">Tarbangla Sporting</Link></h2> }
+                {/* <h3><Link to="/orangeCap">Orange Cap</Link></h3> */}
             </div>
             <div className={s.right}>
-                {window.location.pathname.includes('public') ? <div><h5 style={{'color':'white'}}>Founder-Miran akhtar</h5><h5 style={{'color':'white'}}>Co-founder-Fayeque Hannan</h5></div>:<h3 className={s.startMatch}><a href="/start">Start Match</a></h3> }
+                {localStorage.getItem('privelage') == null || localStorage.getItem('privelage') != 'tarbangla' ?
+                 <div><h2 style={{'color':'white'}}>Dhukki Cup</h2></div>:
+                 <h3 className={s.startMatch}><a href="/start">Start Match</a></h3> }
+                {/* <h3><Link to="/purpleCap">Purple Cap</Link></h3> */}
+            </div>
+        </div>
+        <div className={s.parent2}>
+
+            <div className={s.left2}>
+                <h3><Link to="/public/orangeCap">Orange Cap</Link></h3>
+            </div>
+            <div className={s.imageContainer}>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtqOyti60PKGUNb3GdlHWjWh3EUNmk_vfXTg&usqp=CAU" />
+            </div>
+            <div className={s.right2}>
+                <h3><Link to="/public/purpleCap">Purple Cap</Link></h3>
             </div>
         </div>
     </section>  
