@@ -1,11 +1,13 @@
 import React,{useState} from "react";
 import s from "./FirstDetail.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // import fuzzySearch from "../utils/regEx";
 const AdminSignin = ({data,setData,history,match,handleCallback}) => {
     const  [formData,setformData] = useState({
         passcode:''
       });
+      const navigate = useNavigate();
 
       const onChange=(e) => {
         setformData({...formData,[e.target.name]:e.target.value})
@@ -17,7 +19,7 @@ const AdminSignin = ({data,setData,history,match,handleCallback}) => {
             localStorage.setItem('privelage',formData.passcode);  
             // console.log(formData);
             // handleCallback(e.target.innerText,match.params.matchId);
-            history.push(`/`);
+            navigate(`/`);
       }
     return (
         <div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import {Link} from 'react-router-dom';
+import {Link,useNavigate,useParams} from 'react-router-dom';
 import handleEvent from "../utils/handleEvent";
 import swapStrikers from "../utils/swapStrikers";
 import fuzzySearch from "../utils/regEx";
@@ -16,7 +16,9 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         wide:false,
         noBall:false,
         legBye:false,
-        wicket:false
+        wicket:false,
+        declared:false,
+        declareBowler:false
     });
 
     const  [formData,setformData] = useState({
@@ -27,17 +29,20 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
       const {bowler} = formData;
 
       const [loading,setLoading] = useState(true);
+
+      const { matchId } = useParams();
+      const navigate = useNavigate();
       
     useEffect(() => {
     if(localStorage.getItem('data')){
     var d=JSON.parse(localStorage.getItem('data'));
-    var currentData = d[match.params.matchId];
+    var currentData = d[matchId];
     if(currentData){
     console.log("currentData",currentData);
     data={...currentData};
     if(currentData.bowler.name==''){
         console.log("No bowler found");
-        history.push(`/newBowler/${match.params.matchId}`);
+        navigate(`/newBowler/${matchId}`);
     }
     setData(data);
     }
@@ -45,27 +50,36 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
     setLoading(false);
     },[])
 
+    const handleDeclaredBowler = () => {
+        setExtra({...extra,declareBowler:true});
+        data[data.bowling].bowlers.push(data.bowler);
+        his.push(JSON.parse(JSON.stringify(data)));
+        data.bowler={name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]};
+        console.log(his);
+        navigate(`/newBowler/${matchId}`);
+    }
+
     const handleOut = (e) => {
         if(e.target.value == "Yes"){
             handleOver();
-            history.push(`/firstDetail/${match.params.matchId}`);
+            navigate(`/firstDetail/${matchId}`);
         }
     }
 
     const handleGameOver = (e) => {
         if(e.target.value == "Yes"){
             gameOver();
-            history.push(`/matchSummary/${match.params.matchId}`);
+            navigate(`/matchSummary/${matchId}`);
         }
     }
     const handleEven = (val) => {
-        handleEvent(extra,data,val,history,his,handleBowler,match.params.matchId);
+        handleEvent(extra,data,val,navigate,his,handleBowler,matchId);
     // bug fix 11_nov_22
-        if(data.bowler.ballsDelivered == 0 && (!extra.wide && !extra.noBall && !extra.legBye)){
+        if(data[data.batting].balls == 0 && (!extra.wide && !extra.noBall && !extra.legBye)){
             swapStrikers(data);
         }
         var d=JSON.parse(localStorage.getItem('data'));
-        d[match.params.matchId]=data;
+        d[matchId]=data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
         const config={
@@ -74,7 +88,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        axios.post(`/match/${match.params.matchId}`,body,config);
+        axios.post(`/match/${matchId}`,body,config);
         //  axios.post("http://localhost:5000/generateReport",body,config);
         setData({...data});
         setExtra({...extra,wide:false,noBall:false,legBye:false,wicket:false});
@@ -82,15 +96,15 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         }
 
     const handleOdd = (val) => {
-        handleEvent(extra,data,val,history,his,handleBowler,match.params.matchId);
-        if(!extra.wicket && !data.bowler.ballsDelivered == 0){
+        handleEvent(extra,data,val,navigate,his,handleBowler,matchId);
+        if(!extra.wicket && !data[data.batting].balls == 0){
             swapStrikers(data)
         }
-        if(data.bowler.ballsDelivered == 0 && (extra.wide || extra.noBall || extra.legBye)){
+        if(data[data.batting].balls == 0  && (extra.wide || extra.noBall || extra.legBye)){
             swapStrikers(data);
         }
         var d=JSON.parse(localStorage.getItem('data'));
-        d[match.params.matchId]=data;
+        d[matchId]=data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
         const config={
@@ -99,7 +113,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        axios.post(`/match/${match.params.matchId}`,body,config);
+        axios.post(`/match/${matchId}`,body,config);
         setData({...data});
         setExtra({...extra,wide:false,noBall:false,legBye:false,wicket:false});
         console.log(his);
@@ -139,7 +153,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
         his.pop();
         his.push(JSON.parse(JSON.stringify(data)));
         var d=JSON.parse(localStorage.getItem('data'));
-        d[match.params.matchId]=data;
+        d[matchId]=data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
         setData({...data});
@@ -157,6 +171,10 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
     }
     const handleWicket = () => {
         setExtra({...extra,wicket:!extra.wicket});
+    }
+
+    const handleDeclared = () => {
+        navigate(`/declaredPage/${matchId}`);
     }
     const undo = () => {
         his.pop();
@@ -192,12 +210,12 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        axios.post(`/match/${match.params.matchId}`,body,config);
+        axios.post(`/match/${matchId}`,body,config);
         // data.striker={name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false};
         // data.nonStriker={name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false};
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered > 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false},
         nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
-        history.push(`/firstDetail/${match.params.matchId}`);
+        navigate(`/firstDetail/${matchId}`);
     }
     const gameOver = async (e) => {
         data[data.batting].batsmans.push(data.striker);
@@ -219,7 +237,7 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             data.winner=data.bowling;
         }
         var d=JSON.parse(localStorage.getItem('data'));
-        d[match.params.matchId]=data;
+        d[matchId]=data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
         const config={
@@ -228,17 +246,17 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
             }
         }
         const body = JSON.stringify(data);
-        await axios.post(`/match/${match.params.matchId}`,body,config);
-        await axios.post("http://localhost:5000/generateReport",body,config);
+        await axios.post(`/match/${matchId}`,body,config);
+        // await axios.post("http://localhost:5000/generateReport",body,config);
 
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered >= 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
         ,nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
-        history.push(`/matchSummary/${match.params.matchId}`);
+        navigate(`/matchSummary/${matchId}`);
         // console.log(data);
     }
     const checkValid = () => {
         if(data.striker.name == ''){
-            history.push(`/secondInningsFirstDetails/${match.params.matchId}`)
+            navigate(`/secondInningsFirstDetails/${matchId}`)
         }
     }
     console.log(data);
@@ -377,6 +395,25 @@ const MainPage = ({data,setData,history,handleBowler,his,match}) => {
                                     />
                                     <p>Wicket</p>
                                     </label>
+
+                                    <label>
+                                    <input
+                                         type="checkbox"
+                                        checked={extra.declared}
+                                        onChange={handleDeclared}
+                                    />
+                                    <p>Declare</p>
+                                    </label>
+
+                                    <label>
+                                    <input
+                                         type="checkbox"
+                                        checked={extra.declareBowler}
+                                        onChange={handleDeclaredBowler}
+                                    />
+                                    <p>Declare Bowler</p>
+                                    </label>
+
                                 </div>
 
                  </div>

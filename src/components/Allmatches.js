@@ -2,15 +2,17 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Route, Redirect } from 'react-router';
+import { useNavigate } from "react-router-dom";
 // import s from "./Navbar.module.css";
 import am from "./Allmatches.module.css";
 
 const Allmatches = (props) => {
     const [matches,setMatches] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         if(localStorage.getItem('privelage') == null || localStorage.getItem('privelage') != 'tarbangla'){
             console.log('redirect to public');
-            props.history.push("/public");
+            navigate("/public");
         }
         else{
         if(localStorage.getItem('data') != null){
@@ -29,17 +31,18 @@ const Allmatches = (props) => {
 }
     },[]);
     const onCLick = (e,id) => {
-        props.history.push(`/matchDetails/${id}`);
+        navigate(`/matchDetails/${id}`);
     }
     const resumeGame = (e,id) => {
-        props.history.push(`/mainPage/${id}`);
+        navigate(`/mainPage/${id}`);
     }
     return(
         <div>
         <section className={am.allMatchSection}>
             {matches.length > 0  && matches.map((mId,i) => {
                 return (
-                    <div className={i%2==0 ? am.superParentBlack : am.superParentMaroon}>
+                    <>
+                    <div key={i} className={i%2==0 ? am.superParentBlack : am.superParentMaroon}>
                     <p className={am.date}>{mId.match.date.split("T")[0]}</p>
                     <div key={Math.floor(Math.random()*100000)} className={am.parent}>
                     <div className={am.left}>
@@ -63,6 +66,7 @@ const Allmatches = (props) => {
                     </p> : "" }
                     </div>
                      </div>
+                     </>
                 )
             })}
         

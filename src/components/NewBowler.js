@@ -1,6 +1,8 @@
 import React,{useState} from "react";
 import s from "./FirstDetail.module.css";
 import axios from "axios";
+import { useParams,useNavigate } from "react-router-dom";
+import mps from "./MainPage.module.css";
 // import fuzzySearch from "../utils/regEx";
 const NewBowler = ({data,setData,history,match,handleCallback}) => {
     const  [formData,setformData] = useState({
@@ -14,13 +16,29 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
         // setDt(fuzzySearch(formData.bowler));
       };
 //
+
+const calculateRRR = (data) => {
+  var overRemaining = data.overs - data[data.batting].overs - 1;
+  if(data[data.batting].balls == 0){
+      overRemaining += 1;
+  }else{
+      overRemaining = overRemaining + ((6-data[data.batting].balls)/10);
+  }
+  var MoreToWin = data.toWin + 1 - data[data.batting].runs;
+  console.log(MoreToWin);
+  console.log(overRemaining);
+  return <h5>{(MoreToWin/overRemaining).toFixed(2)}</h5>
+}
+
+const { matchId } = useParams();
+const navigate = useNavigate();
       const onSubmit = (e) => {
             e.preventDefault();
             console.log(e.target.innerText);
             // console.log(formData);
-            // handleCallback(e.target.innerText,match.params.matchId);
-            handleCallback(formData.bowler,match.params.matchId);
-            history.push(`/mainPage/${match.params.matchId}`);
+            // handleCallback(e.target.innerText,matchId);
+            handleCallback(formData.bowler,matchId);
+            navigate(`/mainPage/${matchId}`);
       }
       const handleOver = (e) => {
         data[data.batting].batsmans.push(data.striker);
@@ -31,7 +49,7 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
         data[data.batting].balls = data.bowler.ballsDelivered;
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered > 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false},
         nonStriker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}});
-        history.push(`/firstDetail/${match.params.matchId}`);
+        navigate(`/firstDetail/${matchId}`);
     }
     const gameOver = async (e) => {
         data[data.batting].batsmans.push(data.striker);
@@ -53,7 +71,7 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
             data.winner=data.bowling;
         }
         var d=JSON.parse(localStorage.getItem('data'));
-        d[match.params.matchId]=data;
+        d[matchId]=data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
         const config={
@@ -62,10 +80,10 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
           }
       }
       const body = JSON.stringify(data);
-      await axios.post(`/match/${match.params.matchId}`,body,config);
-      await axios.post("http://localhost:5000/generateReport",body,config);
+      await axios.post(`/match/${matchId}`,body,config);
+      // await axios.post("http://localhost:5000/generateReport",body,config);
         setData({...data,battingFirst:false,toWin:data[data.batting].runs,overs:data.bowler.ballsDelivered >= 0 ? (data[data.batting].overs+1):(data[data.batting].overs),batting:data.bowling,bowling:data.batting,bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},striker:{name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0}});
-        history.push(`/matchSummary/${match.params.matchId}`);
+        navigate(`/matchSummary/${matchId}`);
         // console.log(data);
     }
       console.log(data);
@@ -73,6 +91,16 @@ const NewBowler = ({data,setData,history,match,handleCallback}) => {
         <div>
            <section className={s.ctaSection}>
       <div className="container">
+      <div className={mps.parentTop}>
+                    <p id={mps.battingText}>{data.batting}</p>
+                    <p>CRR</p>
+                    <p>Target</p>
+                    <p>RR</p>
+                    <p id={mps.score}>{ data[data.batting].runs } - { data[data.batting].wickets } <span>({ data[data.batting].overs }.{ data[data.batting].balls })</span></p>
+                    <p>{ (data[data.batting].runs / parseFloat(data[data.batting].overs + data[data.batting].balls/6)).toFixed(2) }</p>
+                    <p>{!data.battingFirst ? <h5>{ data.toWin + 1 }</h5> : <h5>-</h5> }</p>
+                    <p>{!data.battingFirst ? calculateRRR(data) : <h5>-</h5> }</p>
+               </div>
         <div className={s.cta}>
           <form className={s.ctaForm} onSubmit={onSubmit}>
             <div>

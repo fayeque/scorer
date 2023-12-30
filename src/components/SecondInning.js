@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import { useEffect } from "react";
 import { Router } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import s from "./FirstDetail.module.css";
 
 const SecondInning = (props) => {
@@ -9,11 +10,13 @@ const SecondInning = (props) => {
         nonStriker:"",
         bowler:""
       });
+      const navigate = useNavigate;
+      const {matchId} = useParams();
       const {striker,nonStriker,bowler} = formData;
       useEffect(() => {
         // console.log('data after first innings',props.data);
         var d=JSON.parse(localStorage.getItem('data'));
-        var currentData=d[props.match.params.matchId]
+        var currentData=d[matchId]
         props.setData(currentData);
       },[]);
       const onChange=e => setformData({...formData,[e.target.name]:e.target.value});
@@ -21,8 +24,8 @@ const SecondInning = (props) => {
       const onSubmit = (e) => {
             e.preventDefault();
             console.log(formData);
-            props.handleCallback(striker,nonStriker,bowler,props.match.params.matchId);
-            props.history.push(`/mainPage/${props.match.params.matchId}`);
+            props.handleCallback(striker,nonStriker,bowler,matchId);
+            navigate(`/mainPage/${matchId}`);
       }
       console.log(props.data);
     return (

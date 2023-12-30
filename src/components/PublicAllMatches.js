@@ -1,12 +1,15 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 // import s from "./Navbar.module.css";
 import am from "./Allmatches.module.css";
 import axios from "axios";
 
 const PublicAllMatches = (props) => {
     const [matches,setMatches] = useState([]);
+    const navigate = useNavigate();
+    
     useEffect(() => {
         const getData = async () => {
     //     if(localStorage.getItem('data')){
@@ -30,10 +33,10 @@ const PublicAllMatches = (props) => {
         
     },[]);
     const onCLick = (e,id) => {
-        props.history.push(`/public/matchDetails/${id}`);
+        navigate(`/public/matchDetails/${id}`);
     }
     const resumeGame = (e,id) => {
-        props.history.push(`/public/mainPage/${id}`);
+        navigate(`/public/mainPage/${id}`);
     }
     return(
         <div>
@@ -68,7 +71,7 @@ const PublicAllMatches = (props) => {
                 )
             })}
             <div className={am.bottom} >
-                    <button className={am.privelage} onClick={(e) => props.history.push(`/adminSignin`)}>
+                    <button className={am.privelage} onClick={(e) => navigate(`/adminSignin`)}>
                         Sign in as Admin
                     </button>
                    

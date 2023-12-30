@@ -12,6 +12,7 @@ return (
     //     <button><a href="/start">New Game</a></button>
 	//     <button><a href="/">Home</a></button>
     // </div>
+    // <React.Fragment>
     <section className={s.navbarSection}>
         <div className={s.parent}>
             <div className={s.left}>
@@ -40,6 +41,8 @@ return (
             </div>
         </div>
     </section>  
+    // </React.Fragment>
+
 )
 }
 

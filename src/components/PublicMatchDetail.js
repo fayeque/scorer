@@ -4,15 +4,17 @@ import { useEffect,useRef } from "react";
 import md from "./MatchDetails.module.css"
 import mps from "./MainPage.module.css"
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const PublicMatchDetails = (props) => {
     const [data,setData] = useState(null);
     const [loading,setLoading] = useState(true);
     const [show1,setShow1]= useState(false);
     const [show2,setShow2] = useState(true);
+    const {matchId} = useParams();
     useEffect(() => {
         const getData = async () => {
-                const {data} = await axios.get(`/match/scorecard/${props.match.params.matchId}`);
+                const {data} = await axios.get(`/match/scorecard/${matchId}`);
                 console.log("dataa",data);
                 setData(data.data);
                 setLoading(false);

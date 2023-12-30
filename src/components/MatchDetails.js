@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useNavigate,useParams } from "react-router-dom";
 import md from "./MatchDetails.module.css"
 import mps from "./MainPage.module.css";
 import axios from "axios";
@@ -8,15 +9,17 @@ import axios from "axios";
 const MatchDetails = (props) => {
     const [data,setData] = useState(null);
     const [loading,setLoading] = useState(true);
+    const { matchId } = useParams();
+    const navigate = useNavigate();
     // useEffect(() => {
     //     var d=JSON.parse(localStorage.getItem('data'));
-    //     var currentMatch = d[props.match.params.matchId];
+    //     var currentMatch = d[matchId];
     //     setData(currentMatch);
     //     setLoading(false)
     // },[])
     useEffect(() => {
         const getData = async () => {
-                const {data} = await axios.get(`/match/scorecard/${props.match.params.matchId}`);
+                const {data} = await axios.get(`/match/scorecard/${matchId}`);
                 console.log("dataa",data);
                 setData(data.data);
                 setLoading(false);
@@ -33,7 +36,7 @@ const MatchDetails = (props) => {
       })
       setData({...data});
       var d=JSON.parse(localStorage.getItem('data'));
-      d[props.match.params.matchId] = data;
+      d[matchId] = data;
       localStorage.setItem('data',JSON.stringify(d));
     }
 
@@ -44,9 +47,9 @@ const MatchDetails = (props) => {
         }
     }
     const body = JSON.stringify(data);
-    console.log(`/match/${props.match.params.matchId}`);
-    await axios.post(`/match/${props.match.params.matchId}`,body,config);
-    props.history.push("/");
+    console.log(`/match/${matchId}`);
+    await axios.post(`/match/${matchId}`,body,config);
+    navigate("/");
     }
 
     const handleClick = async (e) => {
@@ -57,7 +60,7 @@ const MatchDetails = (props) => {
     }
     const body = JSON.stringify(data);
     await axios.post("/generateReport",body,config);
-    props.history.push("/");
+    navigate("/");
     }
 
     const handleReverse = async (e) => {
@@ -68,7 +71,7 @@ const MatchDetails = (props) => {
     }
     const body = JSON.stringify(data);
     await axios.post("/reverseGeneratedReport",body,config);
-    props.history.push("/");
+    navigate("/");
     }
     console.log(data);
     return(

@@ -34,7 +34,7 @@ const handleEvent = (extra,data,val,history,his,handleBowler,matchId) => {
             data.striker.balls += 1;
             data.bowler.timeline.push({runs:val,extra:'W',over:data[data.batting].overs})
         }
-        history.push(`/wicketPage/${matchId}`);
+        history(`/wicketPage/${matchId}`);
         return 0;
     }
     if(!extra.wicket && !extra.wide && !extra.noBall && !extra.legBye){
@@ -59,22 +59,18 @@ const handleEvent = (extra,data,val,history,his,handleBowler,matchId) => {
     if(data.bowler.ballsDelivered >= 6){
         console.log("6th ball delivered");
         console.log(data[data.batting].overs);
-        data[data.batting].overs = data[data.batting].overs+1;
-        data[data.batting].balls = 0;
         data.bowler.overs += 1;
         data.bowler.ballsDelivered = 0;
-        // if(handleBowler(data.bowler.name).length == 0){
-        //     data[data.bowling].bowlers.push(data.bowler);
-        // }
+    }
+
+    if(data[data.batting].balls == 6){
+        data[data.batting].overs = data[data.batting].overs+1;
+        data[data.batting].balls = 0;
         data[data.bowling].bowlers.push(data.bowler);
-        data.bowler={name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]};
         his.push(JSON.parse(JSON.stringify(data)));
-        // var d=JSON.parse(localStorage.getItem('data'));
-        // d[matchId]=data;
-        // console.log(d);
-        // localStorage.setItem('data',JSON.stringify(d));
+        data.bowler={name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]};
         console.log(his);
-        history.push(`/newBowler/${matchId}`);
+        history(`/newBowler/${matchId}`);
     }else{
     his.push(JSON.parse(JSON.stringify(data)));
    
@@ -83,7 +79,7 @@ const handleEvent = (extra,data,val,history,his,handleBowler,matchId) => {
     // d[matchId]=data;
     // console.log(d);
     // localStorage.setItem('data',JSON.stringify(d));
-    console.log(his);
+    console.log("his here in handleEvent is ",his);
     }
 }
 

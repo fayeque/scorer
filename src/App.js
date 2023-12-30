@@ -1,12 +1,14 @@
 import logo from './logo.svg';
+import React from "react";
 import './App.css';
-import {BrowserRouter as Router,Route,Switch} from 'react-router-dom';
+import {BrowserRouter as Router,Route,Routes} from 'react-router-dom';
 import Landing from './components/Landing';
 import { useState } from 'react';
 import FirstDetail from './components/FirstDetail';
 import MainPage from './components/MainPage';
 import NewBowler from './components/NewBowler';
 import WicketPage from './components/WicketPage';
+import DeclaredPage from './components/DeclaredPage';
 // import Trial from './components/Trial';
 import MatchSummary from './components/MatchSummary';
 import { useEffect } from 'react';
@@ -20,6 +22,7 @@ import PublicMainPage from './components/PublicMainPage';
 import AdminSignin from './components/AdminSignin';
 import OrangeCap from './components/OrangeCap';
 import PurpleCap from './components/PurpleCap';
+import Todos from './components/Todos';
 var his = [];
 
 function App(props) {
@@ -38,7 +41,6 @@ function App(props) {
     bowler:{name:"",runsGiven:0,ballsDelivered:0,overs:0,economy:0,wicket:0,timeline:[]},
   });
 
-
   // const [loading,setLoading] = useState(true);
 
   // useEffect(() => {
@@ -50,7 +52,6 @@ function App(props) {
   //   // }
   //   setLoading(false);
   // },[]);
-
 
 
 
@@ -110,66 +111,56 @@ function App(props) {
       
       <Router>
         {console.log("app.js")}
-        {/* <Navbar /> */}
-        <Switch>
-        <Route exact path="/mainPage/:matchId" render={(props) => {
-            return <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
-          }
-        }
-        
-            // prop => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
-          ></Route> 
-        <Route exact path="/public/mainPage/:matchId" render={(props) => {
-            return <PublicMainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
-          }
+        <Navbar />
+        <Routes>
+        <Route exact path="/mainPage/:matchId" element={
+             <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
+        }></Route> 
+
+        <Route exact path="/public/mainPage/:matchId" element={
+           <PublicMainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
         }
         
             // props => <MainPage {...props} data={data} handleCallback={handleCallback} setData={setData} handleBowler={handleBowler} his={his} />
           ></Route> 
-          <div>
-          <Navbar />
-          <Route exact path="/" render={ 
-            props => <Allmatches {...props} setData={setData} handleCallback={handleCallback} />
+          <React.Fragment>
+          
+          <Route exact path="/" element={ 
+             <Allmatches {...props} setData={setData} handleCallback={handleCallback} />
           }></Route>
-         <Route exact path="/adminSignin" render={ 
-            props => <AdminSignin {...props} />
+         <Route exact path="/adminSignin" element={ <AdminSignin {...props} />
           }></Route>
-          <Route exact path="/public" render={ 
-            props => <PublicAllMatches {...props} setData={setData} handleCallback={handleCallback} />
+
+           <Route exact path="/public" element={<PublicAllMatches {...props} setData={setData} handleCallback={handleCallback} />} />
+          
+          <Route exact path="/matchDetails/:matchId" element={ <MatchDetails {...props} setData={setData} handleCallback={handleCallback} /> 
           }></Route>
-          <Route exact path="/matchDetails/:matchId" render={ 
-            props => <MatchDetails {...props} setData={setData} handleCallback={handleCallback} />
+          <Route exact path="/public/matchDetails/:matchId" element={ <PublicMatchDetails {...props} setData={setData} handleCallback={handleCallback} />
           }></Route>
-          <Route exact path="/public/matchDetails/:matchId" render={ 
-            props => <PublicMatchDetails {...props} setData={setData} handleCallback={handleCallback} />
-          }></Route>
-          <Route exact path="/start" render={ 
-            props => <Landing {...props} data={data} setData={setData} handleCallback={handleCallback} />
-          }></Route> 
-          <Route exact path="/firstDetail/:matchId" render={ 
-            props => <FirstDetail {...props} data={data} handleCallback={handleFirstDetail} />
-          }></Route> 
-          <Route exact path="/secondInningsFirstDetails/:matchId" render={ 
-            props => <SecondInning {...props} data={data} setData={setData} handleCallback={handleFirstDetail} />
+
+          <Route exact path="/start" element={ <Landing {...props} data={data} setData={setData} handleCallback={handleCallback} />} />
+          <Route exact path="/firstDetail/:matchId" element={  <FirstDetail {...props} data={data} handleCallback={handleFirstDetail} />
           }></Route> 
 
-          <Route exact path="/newBowler/:matchId" render={ 
-            props => <NewBowler {...props} setData={setData} data={data} handleCallback={handleBowler} />
+          <Route exact path="/secondInningsFirstDetails/:matchId" element={  <SecondInning {...props} data={data} setData={setData} handleCallback={handleFirstDetail} />
           }></Route> 
-          <Route exact path="/wicketPage/:matchId" render={ 
-            props => <WicketPage {...props} data={data} setData={setData} handleBowler={handleBowler} his={his}/>
+
+          <Route exact path="/newBowler/:matchId" element={ <NewBowler {...props} setData={setData} data={data} handleCallback={handleBowler} />
           }></Route> 
-            <Route exact path="/matchSummary/:matchId" render={ 
-            props => <MatchSummary {...props} data={data} />
+          <Route exact path="/wicketPage/:matchId" element={ <WicketPage {...props} data={data} setData={setData} handleBowler={handleBowler} his={his}/>
           }></Route> 
-          <Route exact path="/public/orangeCap" render={ 
-            props => <OrangeCap {...props} />
+          <Route exact path="/declaredPage/:matchId" element={ <DeclaredPage {...props} data={data} setData={setData} handleBowler={handleBowler} his={his}/>
           }></Route> 
-          <Route exact path="/public/purpleCap" render={ 
-            props => <PurpleCap {...props} />
+            <Route exact path="/matchSummary/:matchId" element={  <MatchSummary {...props} data={data} />
           }></Route> 
-          </div>
-        </Switch>
+          <Route exact path="/public/orangeCap" element={ <OrangeCap {...props} />
+          }></Route> 
+          <Route exact path="/public/purpleCap" element={  <PurpleCap {...props} />
+          }></Route> 
+          <Route exact path="/public/todos" element={  <Todos {...props} />
+          }></Route> 
+          </React.Fragment>
+        </Routes>
       </Router>
   {/* :<div>Loading...</div>} */}
     </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import {Link} from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import handleEvent from "../utils/handleEvent";
 import swapStrikers from "../utils/swapStrikers";
 import fuzzySearch from "../utils/regEx";
@@ -11,11 +11,13 @@ import s from "./Navbar.module.css";
 
 const PublicMainPage = ({data,setData,history,handleBowler,his,match}) => {
 
+    const {matchId} = useParams();
+
       const [loading,setLoading] = useState(true);
 
       useEffect(() => {
         const getData = async () => {
-                const {data} = await axios.get(`/match/${match.params.matchId}`);
+                const {data} = await axios.get(`/match/${matchId}`);
                 console.log("dataa",data);
                 setData(data.d.details);
                 setLoading(false);

@@ -1,12 +1,12 @@
 import axios from "axios";
 import React,{useState} from "react";
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import s from "./Landing.module.css";
 
 
 const Landing = (props) => {
-  // const history = useHistory();
+  const navigate = useNavigate();
   
   console.log(props);
     const  [formData,setformData] = useState({
@@ -55,7 +55,7 @@ const Landing = (props) => {
         const body = JSON.stringify({data:props.data,id:id});
         axios.post("/",body,config);
           props.handleCallback(batting,bowling,overs,team1,team2,id);
-          props.history.push(`/firstDetail/${id}`);
+          navigate(`/firstDetail/${id}`);
       }
 
       const handleBatting = (e) => {

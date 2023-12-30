@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import { useEffect } from "react";
-import { Router } from "react-router-dom";
+import { Router,useNavigate,useParams } from "react-router-dom";
 import s from "./FirstDetail.module.css";
 
 const FirstDetail = (props) => {
@@ -11,13 +11,15 @@ const FirstDetail = (props) => {
       });
       const {striker,nonStriker,bowler} = formData;
       console.log("data in first detail",props.data);
+      const { matchId } = useParams();
+      const navigate = useNavigate();
       useEffect(() => {
         if(localStorage.getItem('data')){
           // props.data.striker={name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false};
           // props.data.nonStriker={name:"",runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false};
         console.log('data after first innings',props.data);
         var d=JSON.parse(localStorage.getItem('data'));
-        d[props.match.params.matchId]=props.data;
+        d[matchId]=props.data;
         console.log(d);
         localStorage.setItem('data',JSON.stringify(d));
         }
@@ -27,8 +29,8 @@ const FirstDetail = (props) => {
       const onSubmit = (e) => {
             e.preventDefault();
             console.log(formData);
-            props.handleCallback(striker,nonStriker,bowler,props.match.params.matchId);
-            props.history.push(`/mainPage/${props.match.params.matchId}`);
+            props.handleCallback(striker,nonStriker,bowler,matchId);
+            navigate(`/mainPage/${matchId}`);
       }
       console.log(props.data);
     return (

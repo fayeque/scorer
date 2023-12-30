@@ -1,11 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import fuzzySearch from "../utils/regEx";
+import { useParams,useNavigate } from "react-router-dom";
 import s from "./FirstDetail.module.css";
+import mps from "./MainPage.module.css";
 
 const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
     const [selected,setSelected] = useState(null);
-    const [batsman,setBatsman] = useState({
+    const [btsmn,setBatsman] = useState({
         newBatsman:""
     });
     var [fdata,setfData] = useState([]);
@@ -13,15 +15,31 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
     const [out,setOut] = useState("");
     const [strike,setStrike] = useState("");
 
+    const { matchId } = useParams();
+    const navigate = useNavigate();
+
+    const calculateRRR = (data) => {
+      var overRemaining = data.overs - data[data.batting].overs - 1;
+      if(data[data.batting].balls == 0){
+          overRemaining += 1;
+      }else{
+          overRemaining = overRemaining + ((6-data[data.batting].balls)/10);
+      }
+      var MoreToWin = data.toWin + 1 - data[data.batting].runs;
+      console.log(MoreToWin);
+      console.log(overRemaining);
+      return <h5>{(MoreToWin/overRemaining).toFixed(2)}</h5>
+  }
+
     const handleChange = (e) =>{
         setSelected(e.target.value);
     }
     const handleOut = (e) => {
         var l=[];
         setOut(e.target.value);
-        console.log(batsman);
-        l.push(batsman.newBatsman)
-        // left.push(batsman.newBatsman);
+        console.log(btsmn);
+        l.push(btsmn.newBatsman)
+        // left.push(btsmn.newBatsman);
         if(data.striker.name == e.target.value){
             l.push(data.nonStriker.name);
 
@@ -37,6 +55,8 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
+        var isFound = false;
+        var atIdx = 0;
         if(selected=='Runout'){
           data[data.batting].wickets += 1;
           if(data.striker.name == out){
@@ -45,19 +65,65 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
             data[data.batting].batsmans.push(data.striker);
             if(data.nonStriker.name == strike){
                 data.striker = data.nonStriker;
-                data.nonStriker= {name:batsman.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+                //27-DEC-2023 changes to check if the new batsman is already present in the batsmand list(due to retd hurt or any such causes
+                data[data.batting].batsmans.forEach((batsman,i) => {
+                    if(batsman.name == btsmn.newBatsman){
+                      data.nonStriker= {name:btsmn.newBatsman,runs:batsman.runs,balls:batsman.balls,fours:batsman.fours,sixes:batsman.sixes,dot:batsman.dot,strikeRate:batsman.strikeRate,notout:true,outBy:'',runOut:false};
+                      isFound = true;
+                    }
+                });
+
+                if(!isFound){
+                  data.nonStriker={name:btsmn.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+                }
+                
             }else{
-                data.striker={name:batsman.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+              data[data.batting].batsmans.forEach((batsman,i) => {
+                if(batsman.name == btsmn.newBatsman){
+                 data.striker= {name:btsmn.newBatsman,runs:batsman.runs,balls:batsman.balls,fours:batsman.fours,sixes:batsman.sixes,dot:batsman.dot,strikeRate:batsman.strikeRate,notout:true,outBy:'',runOut:false};
+                 isFound = true;
+                }
+            });
+
+            if(!isFound){
+              data.striker={name:btsmn.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+            }
+              
             }
           }else{
             data.nonStriker.notout=false;
             data.nonStriker.runOut=true;
             data[data.batting].batsmans.push(data.nonStriker);
             if(data.striker.name == strike){
-                data.nonStriker={name:batsman.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+              data[data.batting].batsmans.forEach((batsman,i) => {
+                if(batsman.name == btsmn.newBatsman){
+                 data.nonStriker= {name:btsmn.newBatsman,runs:batsman.runs,balls:batsman.balls,fours:batsman.fours,sixes:batsman.sixes,dot:batsman.dot,strikeRate:batsman.strikeRate,notout:true,outBy:'',runOut:false};
+                 isFound = true;
+                 atIdx=i;
+                }
+            });
+
+            if(!isFound){
+                data.nonStriker={name:btsmn.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+            }else{
+              data[data.batting].batsmans.splice(atIdx,1);
+            }
             }else{
                 data.nonStriker=data.striker;
-                data.striker={name:batsman.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+                data[data.batting].batsmans.forEach((batsman,i) => {
+                  if(batsman.name == btsmn.newBatsman){
+                   data.striker= {name:btsmn.newBatsman,runs:batsman.runs,balls:batsman.balls,fours:batsman.fours,sixes:batsman.sixes,dot:batsman.dot,strikeRate:batsman.strikeRate,notout:true,outBy:'',runOut:false};
+                   isFound = true;
+                   atIdx=i;
+                  }
+              });
+
+              if(!isFound){
+                data.striker={name:btsmn.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+            }else{
+              data[data.batting].batsmans.splice(atIdx,1);
+            }
+              
             }
          }
 
@@ -69,55 +135,91 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
         data.bowler.wicket += 1;
         if(data.nonStriker.name == strike){
           data.striker = data.nonStriker;
-          data.nonStriker = {name:batsman.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+          data[data.batting].batsmans.forEach((batsman,i) => {
+            console.log("batsman here in are ", batsman.name);
+            console.log("new batsman here in are ", btsmn.newBatsman);
+            if(batsman.name == btsmn.newBatsman){
+              console.log("coming here for sure");
+
+             data.nonStriker= {name:btsmn.newBatsman,runs:batsman.runs,balls:batsman.balls,fours:batsman.fours,sixes:batsman.sixes,dot:batsman.dot,strikeRate:batsman.strikeRate,notout:true,outBy:'',runOut:false};
+             isFound = true;
+             atIdx=i;
+            }
+        });
+        if(!isFound){
+          data.nonStriker = {name:btsmn.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+      }else{
+        data[data.batting].batsmans.splice(atIdx,1);
+      }
+          
         }
         else{
-          data.striker={name:batsman.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+          data[data.batting].batsmans.forEach((batsman,i) => {
+            console.log("batsman here in are ", batsman.name);
+            console.log("new batsman here in are ", btsmn.newBatsman);
+            if(batsman.name == btsmn.newBatsman){
+              console.log("coming here for sure");
+             data.striker= {name:btsmn.newBatsman,runs:batsman.runs,balls:batsman.balls,fours:batsman.fours,sixes:batsman.sixes,dot:batsman.dot,strikeRate:batsman.strikeRate,notout:true,outBy:'',runOut:false};
+             isFound = true;
+             atIdx=i;
+            }
+        });
+        if(!isFound){
+          data.striker = {name:btsmn.newBatsman,runs:0,balls:0,fours:0,sixes:0,dot:0,strikeRate:0,notout:true,outBy:'',runOut:false}
+      }else{
+        data[data.batting].batsmans.splice(atIdx,1);
+      }
         }
 
       }
         if(data.bowler.ballsDelivered >= 6){
             console.log("6th ball delivered");
             console.log(data[data.batting].overs);
-            data[data.batting].overs = data[data.batting].overs+1;
-            data[data.batting].balls=0;
             data.bowler.overs += 1;
             data.bowler.ballsDelivered = 0;
-            var d=data[data.batting].bowlers.filter((b) => {
-                if(b.name==data.bowler.name){
-                    return b;
-                }
-            });
-            if(d.length == 0){
-                data[data.bowling].bowlers.push(data.bowler);
+            // navigate("/newBowler");
+        }
+        
+        if(data[data.batting].balls == 6){
+          data[data.batting].overs = data[data.batting].overs+1;
+          data[data.batting].balls = 0;
+
+          var d=data[data.batting].bowlers.filter((b) => {
+            if(b.name==data.bowler.name){
+                return b;
             }
+        });
+
+        if(d.length == 0){
+            data[data.bowling].bowlers.push(data.bowler);
+        }
+        his.push(JSON.parse(JSON.stringify(data)));
+        console.log(his);
+        data.bowler={name:"",runsGiven:0,wicket:0,ballsDelivered:0,overs:0,economy:0,timeline:[]};
+        var dt=JSON.parse(localStorage.getItem('data'));
+        dt[matchId]=data;
+        console.log(dt);
+        localStorage.setItem('data',JSON.stringify(dt));
+        navigate(`/newBowler/${matchId}`);
+      }
+        else{
             his.push(JSON.parse(JSON.stringify(data)));
             console.log(his);
-            data.bowler={name:"",runsGiven:0,wicket:0,ballsDelivered:0,overs:0,economy:0,timeline:[]};
+            // navigate("/mainPage");
             var dt=JSON.parse(localStorage.getItem('data'));
-            dt[match.params.matchId]=data;
+            dt[matchId]=data;
             console.log(dt);
             localStorage.setItem('data',JSON.stringify(dt));
-            history.push(`/newBowler/${match.params.matchId}`);
-            // history.push("/newBowler");
-        }else{
-            his.push(JSON.parse(JSON.stringify(data)));
-            console.log(his);
-            // history.push("/mainPage");
-            var dt=JSON.parse(localStorage.getItem('data'));
-            dt[match.params.matchId]=data;
-            console.log(dt);
-            localStorage.setItem('data',JSON.stringify(dt));
-            history.push(`/mainPage/${match.params.matchId}`);
+            navigate(`/mainPage/${matchId}`);
         }
         // setData({...data});
         
-        // console.log("nb - " + batsman.newBatsman + "out - " + out + "strike -" + strike)
+        // console.log("nb - " + btsmn.newBatsman + "out - " + out + "strike -" + strike)
     }
     const onChange=(e) => {
-      setBatsman({...batsman,[e.target.name]:e.target.value})
-      // console.log(fuzzySearch(batsman.newBatsman));
-      // setfData(fuzzySearch(batsman.newBatsman));
+      setBatsman({...btsmn,[e.target.name]:e.target.value})
+      // console.log(fuzzySearch(btsmn.newBatsman));
+      // setfData(fuzzySearch(btsmn.newBatsman));
     };
 
     // const setIt = (e) => {
@@ -137,7 +239,7 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
                 New Batsman
               </label>
               <input
-                  value={batsman.newBatsman} onChange={(e) => onChange(e)}
+                  value={btsmn.newBatsman} onChange={(e) => onChange(e)}
                   id="email-address"
                   name="newBatsman"
                   type="String"
@@ -177,13 +279,23 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
           return (
             <div>
                <div className={s.cta}>
+               <div className={mps.parentTop}>
+                    <p id={mps.battingText}>{data.batting}</p>
+                    <p>CRR</p>
+                    <p>Target</p>
+                    <p>RR</p>
+                    <p id={mps.score}>{ data[data.batting].runs } - { data[data.batting].wickets } <span>({ data[data.batting].overs }.{ data[data.batting].balls })</span></p>
+                    <p>{ (data[data.batting].runs / parseFloat(data[data.batting].overs + data[data.batting].balls/6)).toFixed(2) }</p>
+                    <p>{!data.battingFirst ? <h5>{ data.toWin + 1 }</h5> : <h5>-</h5> }</p>
+                    <p>{!data.battingFirst ? calculateRRR(data) : <h5>-</h5> }</p>
+               </div>
           <form className={s.ctaForm} onSubmit={onSubmit}>
             <div>
               <label for="Team1">
                 New Batsman
               </label>
               <input
-              value={batsman.newBatsman} onChange={(e) => onChange(e)}
+              value={btsmn.newBatsman} onChange={(e) => onChange(e)}
               id="email-address"
               name="newBatsman"
               type="String"
@@ -198,7 +310,7 @@ const WicketPage = ({data,setData,handleBowler,history,his,match}) => {
             onChange={(e) => {handleOnStrike(e)}} >
             <option value="">Please Select</option>
             <option value={data.nonStriker.name}>{data.nonStriker.name}</option>
-            <option value={batsman.newBatsman}>{batsman.newBatsman}</option>
+            <option value={btsmn.newBatsman}>{btsmn.newBatsman}</option>
             </select>
             </div>
             <button
