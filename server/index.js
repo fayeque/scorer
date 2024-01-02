@@ -139,7 +139,7 @@ app.post("/generateReport",async (req,res) => {
     // var arr=d[d.batting].batsmans.map(async (batsman) => {
         for(batsman of d[d.batting].batsmans){
         if(batsman.name.trim() != ''){
-        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase(),tournament:'TPL2023'});
+        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",b);
         if(b==null){
             var b=new Batsman({
@@ -150,7 +150,7 @@ app.post("/generateReport",async (req,res) => {
             sixes:batsman.sixes,
             fours:batsman.fours,
             matchesPlayed:1,
-            tournament:'TPL2023'
+            tournament:'WINTER2024'
             });
             b.save();
             // console.log(sdata);
@@ -171,12 +171,12 @@ app.post("/generateReport",async (req,res) => {
     // var arr2=d[d.bowling].batsmans.map(async (batsman) => {
         for(batsman of d[d.bowling].batsmans ){
         if(batsman.name.trim() != ''){
-        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase(),tournament:'TPL2023'});
+        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",b);
         if(b==null){
             var b=new Batsman({
             name:batsman.name.trim().toUpperCase(),runs:batsman.runs,ballsPlayed:batsman.balls,
-            dots:batsman.dot,sixes:batsman.sixes,fours:batsman.fours,matchesPlayed:1,tournament:'TPL2023'
+            dots:batsman.dot,sixes:batsman.sixes,fours:batsman.fours,matchesPlayed:1,tournament:'WINTER2024'
             });
 
             b.save();
@@ -199,7 +199,7 @@ app.post("/generateReport",async (req,res) => {
     // var arr3=d[d.batting].bowlers.map(async (batsman) => {
         for(batsman of d[d.batting].bowlers ){
         if(batsman.name.trim() != ''){
-        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase(),tournament:'TPL2023'});
+        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",p);
         console.log(parseInt(parseInt(batsman.ballsDelivered) + parseInt(batsman.over*6)));
         if(p==null){
@@ -207,7 +207,7 @@ app.post("/generateReport",async (req,res) => {
             name:batsman.name.trim().toUpperCase(),runsGiven:batsman.runsGiven,ballsDelivered: calcualteBallsDelivered(batsman),
             overs:`${Math.floor(batsman.overs)}.${(batsman.ballsDelivered)}`,
              wickets : parseInt(batsman.wicket),economy:(batsman.runsGiven/parseFloat(batsman.overs)).toFixed(2),
-             ballInnings : 1,tournament:'TPL2023'
+             ballInnings : 1,tournament:'WINTER2024'
             });
 
             p.save();
@@ -229,14 +229,14 @@ app.post("/generateReport",async (req,res) => {
     // var arr4=d[d.bowling].bowlers.map(async (batsman) => {
         for(batsman of d[d.bowling].bowlers ){
         if(batsman.name.trim() != ''){
-        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase(),tournament:'TPL2023'});
+        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",p);
         if(p==null){
             var p=new Bowler({
             name:batsman.name.trim().toUpperCase(),runsGiven:batsman.runsGiven,ballsDelivered:calcualteBallsDelivered(batsman),
             overs:`${Math.floor(batsman.overs)}.${(batsman.ballsDelivered)}`,
              wickets : parseInt(batsman.wicket),economy:(batsman.runsGiven/parseFloat(batsman.overs)).toFixed(2),
-             ballInnings:1,tournament:'TPL2023'
+             ballInnings:1,tournament:'WINTER2024'
             });
 
             p.save();
@@ -368,7 +368,7 @@ app.post("/reverseGeneratedReport",async (req,res) => {
     // var arr=d[d.batting].batsmans.map(async (batsman) => {
         for(batsman of d[d.batting].batsmans){
         if(batsman.name.trim() != ''){
-        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase()});
+        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",b);
         b.runs = parseInt(b.runs) - parseInt(batsman.runs);
         b.ballsPlayed = parseInt(b.ballsPlayed) - parseInt(batsman.balls);
@@ -385,7 +385,7 @@ app.post("/reverseGeneratedReport",async (req,res) => {
     // var arr2=d[d.bowling].batsmans.map(async (batsman) => {
         for(batsman of d[d.bowling].batsmans ){
         if(batsman.name.trim() != ''){
-        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase()});
+        var b = await Batsman.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",b);
         b.runs = parseInt(b.runs) - parseInt(batsman.runs);
         b.ballsPlayed = parseInt(b.ballsPlayed) - parseInt(batsman.balls);
@@ -404,7 +404,7 @@ app.post("/reverseGeneratedReport",async (req,res) => {
     // var arr3=d[d.batting].bowlers.map(async (batsman) => {
         for(batsman of d[d.batting].bowlers ){
         if(batsman.name.trim() != ''){
-        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase()});
+        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",p);
         console.log(parseInt(parseInt(batsman.ballsDelivered) + parseInt(batsman.over*6)));
             p.runsGiven=parseInt(p.runsGiven)-parseInt(batsman.runsGiven);
@@ -423,7 +423,7 @@ app.post("/reverseGeneratedReport",async (req,res) => {
     // var arr4=d[d.bowling].bowlers.map(async (batsman) => {
         for(batsman of d[d.bowling].bowlers ){
         if(batsman.name.trim() != ''){
-        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase()});
+        var p = await Bowler.findOne({name:batsman.name.trim().toUpperCase(),tournament:'WINTER2024'});
         console.log("value of b",p);
             p.runsGiven=parseInt(p.runsGiven)-parseInt(batsman.runsGiven);
             p.ballsDelivered=parseInt(p.ballsDelivered)-parseInt(calcualteBallsDelivered(batsman));
@@ -460,6 +460,11 @@ const calcualteBallsDelivered = (batsman) => {
     console.log(ans);
     return ans;
 }
+
+app.get("/deleteUnnecessary" , async (req,res) => {
+    var d= await Batsman.deleteMany({tournament:'TPL2023'});
+    res.json("successfull");
+})
 
 app.get('*', function(req, res) {
     // console.log(path.join(__dirname, '../build', 'index.html'));
