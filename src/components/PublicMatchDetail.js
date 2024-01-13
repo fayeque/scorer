@@ -4,7 +4,7 @@ import { useEffect,useRef } from "react";
 import md from "./MatchDetails.module.css"
 import mps from "./MainPage.module.css"
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 
 const PublicMatchDetails = (props) => {
     const [data,setData] = useState(null);
@@ -12,12 +12,17 @@ const PublicMatchDetails = (props) => {
     const [show1,setShow1]= useState(false);
     const [show2,setShow2] = useState(true);
     const {matchId} = useParams();
+    const navigate = useNavigate();
     useEffect(() => {
         const getData = async () => {
+          try{
                 const {data} = await axios.get(`/match/scorecard/${matchId}`);
                 console.log("dataa",data);
                 setData(data.data);
                 setLoading(false);
+          }catch(error){
+            navigate("/");
+          }
             }
             
             getData();

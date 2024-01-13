@@ -20,7 +20,7 @@ const OrangeCap = (props) => {
                   obj[element.tournament] = [];
                 });
                 console.log('obj here is ',obj);
-                const trnm=data.data[data.data.length-1].tournament;
+                const trnm=data.data[0].tournament;
                 console.log('trnm here is ', trnm);
                 const output = await axios.get(`/orangeCap/${trnm}`);
                 console.log('output.data.dats here is ',output.data.data);

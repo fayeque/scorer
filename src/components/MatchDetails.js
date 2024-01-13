@@ -9,6 +9,7 @@ import axios from "axios";
 const MatchDetails = (props) => {
     const [data,setData] = useState(null);
     const [loading,setLoading] = useState(true);
+    const [tname,setTName] = useState('');
     const { matchId } = useParams();
     const navigate = useNavigate();
     // useEffect(() => {
@@ -19,10 +20,15 @@ const MatchDetails = (props) => {
     // },[])
     useEffect(() => {
         const getData = async () => {
+          try{
                 const {data} = await axios.get(`/match/scorecard/${matchId}`);
                 console.log("dataa",data);
                 setData(data.data);
                 setLoading(false);
+          }
+          catch(error){
+            navigate("/");
+          }
             }
             getData();
         
@@ -38,6 +44,10 @@ const MatchDetails = (props) => {
       var d=JSON.parse(localStorage.getItem('data'));
       d[matchId] = data;
       localStorage.setItem('data',JSON.stringify(d));
+    }
+
+    const onChangeTName = (e) => {
+      setTName(e.target.value);
     }
 
     const updateData = async (e) => {
@@ -58,6 +68,9 @@ const MatchDetails = (props) => {
             'Content-Type':'application/json'
         }
     }
+    data['tournament']= tname;
+    console.log('tname here is ' , tname);
+    console.log(data);
     const body = JSON.stringify(data);
     await axios.post("/generateReport",body,config);
     navigate("/");
@@ -69,6 +82,7 @@ const MatchDetails = (props) => {
             'Content-Type':'application/json'
         }
     }
+    data['tournament']= tname;
     const body = JSON.stringify(data);
     await axios.post("/reverseGeneratedReport",body,config);
     navigate("/");
@@ -297,6 +311,9 @@ const MatchDetails = (props) => {
                         name="wicket"
                         type="String"
                 />
+
+
+
                       {/* <p className={md.parentMiddleBottom}>{person.overs}.{person.ballsDelivered}</p>
                       <p className={md.parentMiddleBottom}>{person.runsGiven}</p>
                       <p className={md.parentMiddleBottom}>{person.wicket}</p> */}
@@ -304,6 +321,18 @@ const MatchDetails = (props) => {
                     </div>
                    )
                })};
+              <div className={md.parentMiddle}>
+              {/* <p className={md.parentMiddleBottom}> Tournament name </p> */}
+                  <input
+                       className={md.ctaForm}
+                        value={tname} 
+                        onChange={(e) => onChangeTName(e)}
+                        id="tournament"
+                        name="tournament"
+                        type="String"
+                />
+                </div>
+
               <div className={md.updation}>
 
                 <button className={md.updationButton} onClick={(e) => handleClick(e) }>Generate Report</button>
