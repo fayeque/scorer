@@ -43,7 +43,15 @@ app.set("view engine","ejs");
 app.use(express.static(path.join(__dirname, 'build')));
 
  app.get("/m",async (req,res) => {
-    var matches= await Match.find({matchStarted:true}).sort({createdAt:-1});
+  const matches = await Match.find({
+    matchStarted: true,
+    createdAt: {
+      $gte: new Date("2024-12-31T00:00:00.000Z"), // Start of 31st Dec 2024
+      $lt: new Date("2025-01-02T00:00:00.000Z"),  // Start of 2nd Jan 2025 (exclusive)
+    },
+  })
+  .sort({ createdAt: -1 }); 
+
     // console.log(matches[0].details[matches[0].details.batting]);
     //res.render('home.ejs',{matches:matches});
     res.json({matches});
