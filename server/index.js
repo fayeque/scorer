@@ -12,7 +12,7 @@ var encoder = new util.TextEncoder('utf-8');
 // var flash=require("connect-flash");
 // var Player = require("./models/Player");
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 // app.use(require("express-session")({
 //     secret:"my name is khan",
